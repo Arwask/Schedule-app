@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Shipping and Receiving",
+    "storeId": 252,
+    "budget": 70000,
+    "createdAt": "2016-11-13 16:30:28.293-06",
+    "updatedAt": "2016-11-13 16:30:28.293-06"
+  },
+  {
+    "name": "Customer Service",
+    "storeId": 252,
+    "budget": 45000,
+    "createdAt": "2016-11-13 16:30:28.293-06",
+    "updatedAt": "2016-11-13 16:30:28.293-06"
+  },
+  {
+    "name": "Cafe",
+    "storeId": 252,
+    "budget": 50000,
+    "createdAt": "2016-11-13 16:30:28.293-06",
+    "updatedAt": "2016-11-13 16:30:28.293-06"
+  }
+]

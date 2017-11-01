@@ -10,10 +10,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       employeeId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Employees',
+          key: 'id'
+        }
       },
       daySlotId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'daySlots',
+          key: 'id'
+        }
       }
     });
   },

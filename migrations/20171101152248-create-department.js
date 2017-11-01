@@ -14,11 +14,8 @@ module.exports = {
       storeId: {
         type: Sequelize.INTEGER
       },
-      openTime: {
-        type: Sequelize.STRING
-      },
-      closeTime: {
-        type: Sequelize.STRING
+      budget: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

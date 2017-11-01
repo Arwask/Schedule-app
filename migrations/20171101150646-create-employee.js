@@ -43,6 +43,13 @@ module.exports = {
       endDate: {
         type: Sequelize.DATEONLY
       },
+      totalHours: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      notes: {
+        type: Sequelize.STRING(1000)
+      },
       ecFirstName: {
         type: Sequelize.STRING
       },

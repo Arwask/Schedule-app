@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     dob: DataTypes.DATEONLY,
     startDate: DataTypes.DATEONLY,
     endDate: DataTypes.DATEONLY,
+    totalHours: DataTypes.INTEGER,
+    notes: DataTypes.STRING,
     ecFirstName: DataTypes.STRING,
     ecLastName: DataTypes.STRING,
     ecPhoneNumber: DataTypes.STRING
