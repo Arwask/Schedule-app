@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: daySlotId,
       through: 'schedules'
     });
+    daySlots.belongsToMany(Employee, {
+      foreignKey: daySlotId,
+      through: 'availability'
+    });
   };
   return daySlots;
 };

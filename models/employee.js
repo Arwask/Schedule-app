@@ -26,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'employeeId',
       through: 'schedules'
     });
+
+    Employee.belongsToMany(availability, {
+      foreignKey: 'employeeId',
+      through: 'availability'
+    });
   };
   return Employee;
 };
