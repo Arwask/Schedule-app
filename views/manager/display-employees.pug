@@ -1,0 +1,14 @@
+extends ../layout.pug
+block content
+	h1 Employees in Department
+	table(class="table")
+		thead
+			tr
+				th(scope="col") Name
+		tbody
+			each employee in employees
+				tr
+					td
+						a(href=`/manager/employee-details/${employee.id}`) #{employee.firstName} #{employee.lastName}
+			else
+				tr No products returned

@@ -1,0 +1,24 @@
+doctype html
+html
+	head
+		title Bangazon
+		meta(charset="utf-8")
+		meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+		link(rel='stylesheet', href='/public/lib/bootstrap/css/bootstrap.min.css')
+		link(rel='stylesheet' href='/public/css/main.css')
+	body
+		if(session.passport)
+			if(session.passport.user.jobTitle === 'manager')
+				include manager/nav.pug
+			else
+				include employee/nav.pug
+		else
+			include nav.pug
+		.container
+			block content
+			script(src='/public/lib/jQuery/jquery.js')
+			script(src='/public/lib/popper/umd/popper.js')
+			script(src='/public/lib/bootstrap/js/bootstrap.min.js')
+			script(src='/public/lib/firebase/firebase.js')
+			script(src='/public/javascripts/fb-config.js')
+			script(src='/public/javascripts/main.js')

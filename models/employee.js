@@ -20,16 +20,16 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Employee.associate = function(models) {
-    Employee.belongsTo(Department, {
-      foreignKey: departmentId
+    Employee.belongsTo(models.Department, {
+      foreignKey: 'departmentId'
     });
 
-    Employee.belongsToMany(schedules, {
+    Employee.belongsToMany(models.daySlots, {
       foreignKey: 'employeeId',
       through: 'schedules'
     });
 
-    Employee.belongsToMany(availability, {
+    Employee.belongsToMany(models.daySlots, {
       foreignKey: 'employeeId',
       through: 'availability'
     });
