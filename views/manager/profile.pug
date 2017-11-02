@@ -1,1 +1,64 @@
 extends ../layout.pug
+block content
+  .col-8
+    h3 #{manager.firstName} #{manager.lastName}
+    a(class="btn btn-primary account-btn" href=`/manager/edit-manager/${manager.id}`) Edit Details
+    table(class="table")
+      tbody
+        tr
+          th(colspan=2)
+            h1 Personal Details
+        tr
+          th First Name
+          td #{manager.firstName}
+        tr
+          th Last Name
+          td #{manager.lastName}
+        tr
+          th Date Of Birth
+          td #{manager.dob}
+        tr
+          th Phone Number
+          td #{manager.phoneNumber}
+        tr
+          th Email
+          td #{manager.email}
+        tr
+          th(colspan=2)
+            h1 Employment Details
+        tr
+          th Manager ID
+          td #{manager.employeeId}
+        tr
+          th Department
+          td #{manager.Department.name}
+        tr
+          th JobTitle
+          td #{manager.jobTitle}
+        tr
+          th Start Date
+          td #{manager.startDate}
+        tr
+          th End Date
+          if(manager.endDate != null)
+            td #{manager.endDate}
+          else
+            td Currently employed
+        tr
+          th Total Hours
+          td #{manager.totalHours}
+        tr
+          th Notes
+          td #{manager.notes}
+        tr
+          th(colspan=2)
+            h1 Emergency Contact Details
+        tr
+          th Name
+          td #{manager.ecFirstName} #{manager.ecLastName}
+        tr
+          th Contact
+          td #{manager.ecPhoneNumber}
+        tr
+          th Last Updated
+          td #{manager.updatedAt}

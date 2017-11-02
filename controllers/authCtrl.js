@@ -82,7 +82,7 @@ module.exports.welcome = (req, res, next) => {
 
 module.exports.isManager = (req, res, next) => {
   if (req.session.passport.user.jobTitle == 'manager') {
-    res.render('manager/profile');
+    res.render('manager/index');
   } else res.render('employee/profile');
 };
 /**
