@@ -1,0 +1,7 @@
+extends layout.pug
+block content
+	if message
+		h2= message
+	.row
+		include partials/user-form.pug
+		//- include partials/login-form.pug
