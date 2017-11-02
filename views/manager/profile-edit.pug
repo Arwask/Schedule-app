@@ -1,0 +1,80 @@
+extends ../layout.pug
+block content
+  .col-8
+    form(action=`/manager/edit-manager/${data.employee.id}?_method=PUT`, method="POST")
+      table(class="table")
+        tbody
+          tr
+            th(colspan=2)
+              h1 Personal Details
+          tr
+            th First Name
+            td
+              input(type="text" name="firstName" id="firstName" value=`${data.employee.firstName}`)
+          tr
+            th Last Name
+            td
+              input(type="text" name="lastName" id="lastName" value=`${data.employee.lastName}`)
+          tr
+            th Date Of Birth
+            td
+              input(type="date" name="dob" id="dob" value=`${data.employee.dob}`)
+          tr
+            th Phone Number
+            td
+              input(type="text" name="phoneNumber" id="phoneNumber" value=`${data.employee.phoneNumber}`)
+          tr
+            th Email
+            td
+              input(type="text" name="email" id="email" value=`${data.employee.email}`)
+          tr
+            th(colspan=2)
+              h1 Employment Details
+          tr
+            th Employee ID
+            td #{data.employee.employeeId}
+          tr
+            th Department
+            td #{data.employee.Department.name}
+          tr
+            th JobTitle
+            td #{data.employee.jobTitle}
+          tr
+            th Start Date
+            td #{data.employee.startDate}
+          tr
+            th End Date
+            if(data.employee.endDate != null)
+              td ex-employee
+            else
+              td Currently employed
+
+          tr
+            th Total Hours
+            td
+              input(type="number" name="totalHours" id="totalHours" value=`${data.employee.totalHours}`)
+          tr
+            th Notes
+            td
+              input(type="textarea" name="notes" id="notes" value=`${data.employee.notes}`)
+          tr
+            th(colspan=2)
+              h1 Emergency Contact Details
+          tr
+            th First Name
+            td
+               input(type="text" name="ecFirstName" id="ecFirstName" value=`${data.employee.ecFirstName}`)
+          tr
+            th Last Name
+            td
+               input(type="text" name="ecLastName" id="ecLastName" value=`${data.employee.ecLastName}`)
+          tr
+            th Contact
+            td
+               input(type="text" name="ecPhoneNumber" id="ecPhoneNumber" value=`${data.employee.ecPhoneNumber}`)
+          tr
+            th Last Updated
+            td #{data.employee.updatedAt}
+          tr
+            td(colspan=2)
+              button(type="submit" class="btn btn-outline-primary" href=`/manager/profile`) Save
