@@ -3,17 +3,16 @@
 const { Router } = require('express');
 const router = Router();
 // const
-const { displayRegister, register, displayLogin, login, welcome, logout } = require('../controllers/authCtrl.js');
+const { displayRegister, displayLogin, register, login, logout, isManager } = require('../controllers/authCtrl.js');
 
 // new users
 router.get('/register', displayRegister);
 router.post('/register', register);
-
 // login existing users
 router.get('/login', displayLogin);
 router.post('/login', login);
 
-router.get('/welcome', isLoggedIn, welcome);
+router.get('/welcome', isLoggedIn, isManager);
 router.post('/logout', logout);
 
 // We add this to the welcome route as an additional step to take before calling
