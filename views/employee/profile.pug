@@ -1,1 +1,64 @@
 extends ../layout.pug
+block content
+  .col-8
+    h3 #{employee.firstName} #{employee.lastName}
+    a(class="btn btn-primary account-btn" href=`/employee/edit-profile`) Edit Details
+    table(class="table")
+      tbody
+        tr
+          th(colspan=2)
+            h1 Personal Details
+        tr
+          th First Name
+          td #{employee.firstName}
+        tr
+          th Last Name
+          td #{employee.lastName}
+        tr
+          th Date Of Birth
+          td #{employee.dob}
+        tr
+          th Phone Number
+          td #{employee.phoneNumber}
+        tr
+          th Email
+          td #{employee.email}
+        tr
+          th(colspan=2)
+            h1 Employment Details
+        tr
+          th employee ID
+          td #{employee.employeeId}
+        tr
+          th Department
+          td #{employee.Department.name}
+        tr
+          th JobTitle
+          td #{employee.jobTitle}
+        tr
+          th Start Date
+          td #{employee.startDate}
+        tr
+          th End Date
+          if(employee.endDate != null)
+            td #{employee.endDate}
+          else
+            td Currently employed
+        tr
+          th Total Hours
+          td #{employee.totalHours}
+        tr
+          th Notes
+          td #{employee.notes}
+        tr
+          th(colspan=2)
+            h1 Emergency Contact Details
+        tr
+          th Name
+          td #{employee.ecFirstName} #{employee.ecLastName}
+        tr
+          th Contact
+          td #{employee.ecPhoneNumber}
+        tr
+          th Last Updated
+          td #{employee.updatedAt}

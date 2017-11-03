@@ -24,7 +24,7 @@ router.get('/manager/employee-details/:employeeId', isLoggedIn, isManager, getEm
 router.get('/manager/edit-employee/:employeeId', isLoggedIn, isManager, editEmployeeDetailsForm);
 router.post('/manager/edit-employee/:employeeId', isLoggedIn, isManager, editEmployeeDetails);
 // profile view
-router.get('/manager/profile', isLoggedIn, getManagerData);
+router.get('/manager/profile', isLoggedIn, isManager, getManagerData);
 router.get('/manager/edit-manager/:managerId', isLoggedIn, isManager, getManagerEditForm);
 router.post('/manager/edit-manager/:managerId', isLoggedIn, isManager, editManagerProfile);
 // add new employee

@@ -81,10 +81,17 @@ module.exports.welcome = (req, res, next) => {
 };
 
 module.exports.isManager = (req, res, next) => {
+  res.locals.employee = false;
+  res.locals.manager = false;
   if (req.session.passport.user.jobTitle == 'manager') {
+    res.locals.manager = true;
+    return next();
+  } else if (req.session.passport.user.jobTitle == 'part-time' || req.session.passport.user.jobTitle == 'full-time') {
+    res.locals.employee = true;
     return next();
   } else res.render('/login');
 };
+
 /**
  * Controller method to handle the logout click, destroy the session, and redirect users to the home page
  */
