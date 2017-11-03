@@ -1,0 +1,60 @@
+extends ../layout.pug
+block content
+  .col-8
+    form(action=`/employee/edit-profile?_method=PUT`, method="POST")
+      table(class="table")
+        tbody
+          tr
+            th(colspan=2)
+              h1 #{employee.firstName} #{employee.lastName}
+          tr
+            th(colspan=2)
+              h3 Personal Details
+          tr
+            th Date Of Birth
+            td
+              input(type="date" name="dob" id="dob" value=`${employee.dob}`)
+          tr
+            th Phone Number
+            td
+              input(type="text" name="phoneNumber" id="phoneNumber" value=`${employee.phoneNumber}`)
+          tr
+            th Email
+            td
+              input(type="text" name="email" id="email" value=`${employee.email}`)
+          tr
+            th(colspan=2)
+              h1 Employment Details
+          tr
+            th Employee ID
+            td #{employee.employeeId}
+          tr
+            th Department
+            td #{employee.Department.name}
+          tr
+            th JobTitle
+            td #{employee.jobTitle}
+          tr
+            th Start Date
+            td #{employee.startDate}
+          tr
+            th(colspan=2)
+              h3 Emergency Contact Details
+          tr
+            th First Name
+            td
+               input(type="text" name="ecFirstName" id="ecFirstName" value=`${employee.ecFirstName}`)
+          tr
+            th Last Name
+            td
+               input(type="text" name="ecLastName" id="ecLastName" value=`${employee.ecLastName}`)
+          tr
+            th Contact
+            td
+               input(type="text" name="ecPhoneNumber" id="ecPhoneNumber" value=`${employee.ecPhoneNumber}`)
+          tr
+            th Last Updated
+            td #{employee.updatedAt}
+          tr
+            td(colspan=2)
+              button(type="submit" class="btn btn-outline-primary" href=`/employee/profile`) Save

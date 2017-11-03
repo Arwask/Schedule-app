@@ -5,7 +5,7 @@ const router = Router();
 // const
 const { displayRegister, displayLogin, register, login, logout, isManager } = require('../controllers/authCtrl.js');
 
-const { displayManagerIndex } = require('../controllers/employeeCtrl');
+const { displayIndex } = require('../controllers/employeeCtrl');
 // new users
 router.get('/register', displayRegister);
 router.post('/register', register);
@@ -13,7 +13,7 @@ router.post('/register', register);
 router.get('/login', displayLogin);
 router.post('/login', login);
 
-router.get('/welcome', isLoggedIn, isManager, displayManagerIndex);
+router.get('/welcome', isLoggedIn, isManager, displayIndex);
 router.post('/logout', logout);
 
 // We add this to the welcome route as an additional step to take before calling
