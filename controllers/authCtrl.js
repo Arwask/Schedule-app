@@ -82,8 +82,8 @@ module.exports.welcome = (req, res, next) => {
 
 module.exports.isManager = (req, res, next) => {
   if (req.session.passport.user.jobTitle == 'manager') {
-    res.render('manager/index');
-  } else res.render('employee/profile');
+    return next();
+  } else res.render('/login');
 };
 /**
  * Controller method to handle the logout click, destroy the session, and redirect users to the home page

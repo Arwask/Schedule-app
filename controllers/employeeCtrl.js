@@ -1,5 +1,9 @@
 'use strict';
 
+module.exports.displayManagerIndex = (req, res, next) => {
+  res.render('manager/index');
+};
+
 module.exports.getDepartmentEmployees = (req, res, next) => {
   const { Employee, Department } = req.app.get('models');
   const managerDept = req.session.passport.user.departmentId;
@@ -142,4 +146,36 @@ module.exports.editManagerProfile = (req, res, next) => {
     .catch(err => {
       next(err);
     });
+};
+
+module.exports.newEmployeeForm = (req, res, next) => {
+  const { Employee, Department, sequelize } = req.app.get('models');
+  const data = {};
+  Department.findAll()
+    .then(Departments => {
+      data.depts = Departments;
+      Employee.findAll({
+        attributes: [[sequelize.fn('DISTINCT', sequelize.col('jobTitle')), 'jobTitle']]
+      }).then(titles => {
+        data.jobTitle = titles;
+        Employee.findOne({
+          attributes: [[sequelize.fn('MAX', sequelize.col('employeeId')), 'lastEmployeeId']]
+        }).then(empId => {
+          let randomNumber = Math.floor(Math.random() * 5 + 1);
+          const lastId = empId.dataValues.lastEmployeeId;
+          data.newEmployeeId = parseInt(lastId) + parseInt(randomNumber);
+          res.render('manager/new-employee-form', { data });
+        });
+      });
+    })
+    .catch(err => {
+      next(err);
+    });
+};
+
+module.exports.addNewEmployee = (req, res, next) => {
+  const { Employee } = req.app.get('models');
+  Employee.create(req.body).then(() => {
+    res.redirect('/manager/manage-employee');
+  });
 };

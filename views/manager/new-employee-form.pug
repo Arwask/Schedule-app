@@ -1,0 +1,53 @@
+extends ../layout.pug
+block content
+  .col-8
+    form(action='/manager/add-employee', method="POST")
+      table(class="table")
+        tbody
+          tr
+            th(colspan=2)
+              h1 Personal Details
+          tr
+            th First Name
+            td
+              input(type="text" name="firstName" id="firstName")
+          tr
+            th Last Name
+            td
+              input(type="text" name="lastName" id="lastName" )
+          tr
+            th(colspan=2)
+              h1 Employment Details
+          tr
+            th Employee ID
+            td #{data.newEmployeeId}
+          tr
+            th Department
+            td
+              select(class="btn btn-light dropdown-toggle" #propertyType.select.form-control.input-lg name='departmentId')
+                div(class="dropdown-menu" aria-labelledby="dropdownMenuButton")
+                  each dept in data.depts
+                    option(class="dropdown-item" href="#" name="deptName" id="dept.id" value=`${dept.id}`) #{dept.name}
+
+          tr
+            th JobTitle
+            td
+              select(class="btn btn-light dropdown-toggle" #propertyType.select.form-control.input-lg name='jobTitle')
+                div(class="dropdown-menu" aria-labelledby="dropdownMenuButton")
+                  each title in data.jobTitle
+                    option(class="dropdown-item" href="#" name="jobTitle" id="jobTitle" ) #{title.jobTitle}
+          tr
+            th Start Date
+            td
+              input(type="date" name="startDate" id="startDate")
+          tr
+            th Total Hours
+            td
+              input(type="number" name="totalHours" id="totalHours")
+          tr
+            th Notes
+            td
+              input(type="textarea" name="notes" id="notes")
+          tr
+            td(colspan=2)
+              button(type="submit" class="btn btn-outline-primary" href=`/manager/manage-employee`) Save
