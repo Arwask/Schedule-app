@@ -1,0 +1,20 @@
+extends ../layout.pug
+block content
+  .col-8
+    h3 #{data.employee.firstName} #{data.employee.lastName}
+      a(class="btn btn-primary account-btn" href=`/employee/edit-availability`) Edit
+      table(class="table")
+        each day in data.days
+          tbody
+            tr
+              th
+                h5 #{day.name}
+              td
+                select(class="btn btn-light dropdown-toggle" #propertyType.select.form-control.input-lg name='slotId')
+                  div(class="dropdown-menu" aria-labelledby="dropdownMenuButton")
+                    each ds in data.eachDaySlots
+                      if(ds.dayId == day.id)
+                        each s in data.slots
+                          if(s.id == ds.slotId)
+                            option(class="dropdown-item" href="#" name="deptName" id="dept.id" value=`${s.id}`) #{s.startTime} - #{s.endTime}
+

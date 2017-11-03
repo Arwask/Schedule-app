@@ -289,3 +289,34 @@ module.exports.editProfile = (req, res, next) => {
     });
   }
 };
+
+module.exports.getAvailability = (req, res, next) => {
+  if (res.locals.employee == true) {
+    let data = {};
+    const { Employee, daySlots, Days, Slots } = req.app.get('models');
+    const currentEmployeeId = req.session.passport.user.id;
+    Employee.findById(currentEmployeeId, {
+      include: [
+        {
+          model: daySlots
+        }
+      ]
+    }).then(employee => {
+      // find current employee with availability
+      data.employee = employee;
+      Slots.findAll().then(slots => {
+        // find all slots to fill the dropdowns
+        data.slots = slots;
+        Days.findAll().then(days => {
+          // find all days to fill the Days
+          data.days = days;
+          daySlots.findAll().then(eachDaySlots => {
+            data.eachDaySlots = eachDaySlots;
+            // res.json(data);
+            res.render('employee/availability', { data });
+          });
+        });
+      });
+    });
+  }
+};

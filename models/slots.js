@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Slots.associate = function(models) {
-    Slots.belongsToMany(models.Day, {
-      foreignKey: 'dayId',
+    Slots.belongsToMany(models.Days, {
+      foreignKey: 'slotId',
       through: 'daySlots'
     });
   };
