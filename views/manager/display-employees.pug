@@ -7,8 +7,7 @@ block content
 				th(scope="col") Name
 		tbody
 			each employee in employees
-				tr
-					td
-						a(href=`/manager/employee-details/${employee.id}`) #{employee.firstName} #{employee.lastName}
-			else
-				tr No products returned
+				if(employee.id !== session.passport.user.id)
+					tr
+						td
+							a(href=`/manager/employee-details/${employee.id}`) #{employee.firstName} #{employee.lastName}
