@@ -238,6 +238,38 @@ module.exports.addNewEmployee = (req, res, next) => {
   }
 };
 
+module.exports.scheduleGrid = (req, res, next) => {
+  if (res.locals.manager == true) {
+    const { Employee, Department, Slots, Days, daySlots } = req.app.get('models');
+    const managerDept = req.session.passport.user.departmentId;
+    let data = {};
+    Employee.findAll({ include: [{ model: Department }], where: { departmentId: managerDept } }).then(employees => {
+      data.employees = employees;
+      Slots.findAll().then(slots => {
+        // find all slots to fill the dropdowns
+        data.slots = slots;
+        Days.findAll().then(days => {
+          // find all days to fill the Days
+          data.days = days;
+          daySlots
+            .findAll({ attributes: ['id', 'slotId', 'dayId'] })
+            .then(eachDaySlots => {
+              data.eachDaySlots = eachDaySlots;
+              // res.json(data);
+              res.render('manager/schedule-grid', { data });
+            })
+            .catch(err => {
+              next(err);
+            });
+        });
+      });
+    });
+  } else {
+    let errorMsg = { msg: 'You do not have permission for this route' };
+    res.render('errorPage', { errorMsg });
+  }
+};
+
 // Employee Methods
 
 module.exports.getEmployeeProfile = (req, res, next) => {

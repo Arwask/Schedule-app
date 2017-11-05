@@ -12,7 +12,8 @@ const {
   getManagerEditForm,
   editManagerProfile,
   newEmployeeForm,
-  addNewEmployee
+  addNewEmployee,
+  scheduleGrid
 } = require('../controllers/employeeCtrl');
 
 const { isManager } = require('../controllers/authCtrl');
@@ -30,6 +31,10 @@ router.post('/manager/edit-manager/:managerId', isLoggedIn, isManager, editManag
 // add new employee
 router.get('/manager/add-employee', isLoggedIn, isManager, newEmployeeForm);
 router.post('/manager/add-employee', isLoggedIn, isManager, addNewEmployee);
+
+//schedule routes
+router.get('/manager/generate-schedule', isLoggedIn, isManager, scheduleGrid);
+
 module.exports = router;
 
 function isLoggedIn(req, res, next) {
