@@ -2,7 +2,7 @@
 
 // Common Methods
 
-module.exports.displayIndex = (req, res, next) => {
+module.exports.displayIndex = (req, res) => {
   if (res.locals.manager) {
     res.render('manager/index');
   } else if (res.locals.employee) {
@@ -225,9 +225,13 @@ module.exports.newEmployeeForm = (req, res, next) => {
 module.exports.addNewEmployee = (req, res, next) => {
   if (res.locals.manager == true) {
     const { Employee } = req.app.get('models');
-    Employee.create(req.body).then(() => {
-      res.redirect('/manager/manage-employee');
-    });
+    Employee.create(req.body)
+      .then(() => {
+        res.redirect('/manager/manage-employee');
+      })
+      .catch(err => {
+        next(err);
+      });
   } else {
     let errorMsg = { msg: 'You do not have permission for this route' };
     res.render('errorPage', { errorMsg });
@@ -284,8 +288,150 @@ module.exports.editProfile = (req, res, next) => {
       ecLastName: req.body.ecLastName,
       ecPhoneNumber: req.body.ecPhoneNumber
     };
-    Employee.update(empObj, { where: { id: currentEmployeeId } }).then(() => {
-      res.redirect('/employee/profile');
+    Employee.update(empObj, { where: { id: currentEmployeeId } })
+      .then(() => {
+        res.redirect('/employee/profile');
+      })
+      .catch(err => {
+        next(err);
+      });
+  } else {
+    let errorMsg = { msg: 'You do not have permission to this route' };
+    res.render('errorPage', { errorMsg });
+  }
+};
+
+module.exports.getAvailability = (req, res, next) => {
+  if (res.locals.employee == true) {
+    let data = {};
+    const { daySlots, Days, Slots, sequelize } = req.app.get('models');
+    const currentEmployeeId = req.session.passport.user.id;
+    sequelize
+      .query(
+        `SELECT "a"."employeeId", "a"."daySlotId" FROM "Employees" "e" JOIN "availability" "a" ON "e"."id" = "a"."employeeId" AND "e"."id" = '${currentEmployeeId}'`,
+        {
+          type: sequelize.QueryTypes.INSERT
+        }
+      )
+      .then(employee => {
+        // find current employee's availability
+        data.employee = employee;
+        Slots.findAll().then(slots => {
+          // find all slots to fill the dropdowns
+          data.slots = slots;
+          Days.findAll().then(days => {
+            // find all days to fill the Days
+            data.days = days;
+            daySlots
+              .findAll({ attributes: ['id', 'slotId', 'dayId'] })
+              .then(eachDaySlots => {
+                data.eachDaySlots = eachDaySlots;
+                // res.json(data);
+                res.render('employee/availability', { data });
+              })
+              .catch(err => {
+                next(err);
+              });
+          });
+        });
+      });
+  } else {
+    let errorMsg = { msg: 'You do not have permission to this route' };
+    res.render('errorPage', { errorMsg });
+  }
+};
+
+module.exports.addAvailability = (req, res, next) => {
+  let data = req.body.slots;
+  // res.json(data);
+  if (res.locals.employee == true) {
+    const { sequelize } = req.app.get('models');
+    const currentEmployeeId = req.session.passport.user.id;
+    let date = new Date().toISOString();
+    let queryString = 'INSERT INTO "availability"("daySlotId", "employeeId", "createdAt", "updatedAt") VALUES';
+    data.forEach(chunk => {
+      if (chunk !== '0') {
+        queryString += `('${chunk}', '${currentEmployeeId}', '${date}', '${date}'),`;
+      }
     });
+    queryString = queryString.slice(0, -1);
+    console.log('What is the string here?', queryString);
+    sequelize
+      .query(queryString, {
+        type: sequelize.QueryTypes.INSERT
+      })
+      .then(data => {
+        // res.json(data);
+      })
+      .catch(err => {
+        next(err);
+      });
+    res.redirect('/employee/availability-view');
+  } else {
+    let errorMsg = { msg: 'You do not have permission to this route' };
+    res.render('errorPage', { errorMsg });
+  }
+};
+
+module.exports.getUserAvailability = (req, res, next) => {
+  if (res.locals.employee == true) {
+    let data = {};
+    const { sequelize, daySlots, Days, Slots } = req.app.get('models');
+    const currentEmployeeId = req.session.passport.user.id;
+    sequelize
+      .query(
+        `SELECT "a"."employeeId", "a"."daySlotId" FROM "Employees" "e" JOIN "availability" "a" ON "e"."id" = "a"."employeeId" AND "e"."id" = '${currentEmployeeId}'`,
+        {
+          type: sequelize.QueryTypes.INSERT
+        }
+      )
+      .then(employee => {
+        // find current employee's availability
+        data.employee = employee;
+        Slots.findAll().then(slots => {
+          // find all slots to fill the dropdowns
+          data.slots = slots;
+          Days.findAll().then(days => {
+            // find all days to fill the Days
+            data.days = days;
+            daySlots
+              .findAll({ attributes: ['id', 'slotId', 'dayId'] })
+              .then(eachDaySlots => {
+                data.eachDaySlots = eachDaySlots;
+                // res.json(data);
+                res.render('employee/view-availability', { data });
+              })
+              .catch(err => {
+                next(err);
+              });
+          });
+        });
+      });
+  } else {
+    let errorMsg = { msg: 'You do not have permission to this route' };
+    res.render('errorPage', { errorMsg });
+  }
+};
+
+module.exports.removeSingleAvailability = (req, res, next) => {
+  console.log('Here');
+  if (res.locals.employee == true) {
+    const currentEmployeeId = req.session.passport.user.id;
+    let slotToRemove = req.params.slotId;
+    console.log('slot', slotToRemove);
+    const { sequelize } = req.app.get('models');
+    sequelize
+      .query(`DELETE FROM availability WHERE "employeeId"=${currentEmployeeId} AND "daySlotId" = ${slotToRemove}`, {
+        type: sequelize.QueryTypes.DELETE
+      })
+      .then(() => {
+        res.redirect('back');
+      })
+      .catch(err => {
+        next(err);
+      });
+  } else {
+    let errorMsg = { msg: 'You do not have permission to this route' };
+    res.render('errorPage', { errorMsg });
   }
 };

@@ -1,0 +1,26 @@
+extends ../layout.pug
+block content
+  .col-8
+    h3 #{data.employee.firstName} #{data.employee.lastName}
+    a(class="btn btn-outline-success" href="/employee/availability") Edit Availability
+    table(class="table")
+      each day in data.days
+        //- for each day
+        tbody
+          tr
+            th
+              h5 #{day.name}
+              each avail in data.employee[0]
+                each ds in data.eachDaySlots
+                  if(avail.daySlotId === ds.id)
+                    if(day.id == ds.dayId)
+                      each slot in data.slots
+                        if(slot.id == ds.slotId)
+                          td
+                            h6 (#{slot.startTime} - #{slot.endTime})
+                            -console.log("id??",avail.daySlotId)
+                          td
+                            form(action=`/employee/remove-availability/${avail.daySlotId}?_method=DELETE`, method="post")
+                              button(type="submit" class="btn btn-outline-danger") X
+
+
