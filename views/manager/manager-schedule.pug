@@ -14,7 +14,8 @@ block content
                 th #{date.slice(0, 10)}
           each emp in data.employees
             tr
-              td #{emp.firstName} #{emp.lastName}
+              if(emp.jobTitle == 'manager')
+                td #{emp.firstName} #{emp.lastName}
                 each day in data.days
                   td
                     select(class="btn btn-light dropdown-toggle" #propertyType.select.form-control.input-lg name='slots')

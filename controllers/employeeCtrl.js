@@ -255,7 +255,8 @@ module.exports.scheduleGrid = (req, res, next) => {
             .findAll({ attributes: ['id', 'slotId', 'dayId'] })
             .then(eachDaySlots => {
               data.eachDaySlots = eachDaySlots;
-              // res.json(data);
+              let nextWeek = getDates();
+              data.dates = nextWeek;
               res.render('manager/schedule-grid', { data });
             })
             .catch(err => {
@@ -263,6 +264,76 @@ module.exports.scheduleGrid = (req, res, next) => {
             });
         });
       });
+    });
+  } else {
+    let errorMsg = { msg: 'You do not have permission for this route' };
+    res.render('errorPage', { errorMsg });
+  }
+};
+
+let getDates = () => {
+  let today = new Date();
+  let day = today.getDay();
+  let nearestSunday = new Date(new Date().getTime() + (7 - day) * 24 * 60 * 60 * 1000);
+  let nextWeek = [nearestSunday.toISOString()];
+  for (let i = 1; i < 7; i++) {
+    nextWeek.push(new Date(nearestSunday.getTime() + i * 24 * 60 * 60 * 1000).toISOString());
+  }
+  return nextWeek;
+};
+
+module.exports.getManagerSchedule = (req, res, next) => {
+  if (res.locals.manager == true) {
+    const { Employee, Department, Slots, Days, daySlots } = req.app.get('models');
+    const managerDept = req.session.passport.user.departmentId;
+    let data = {};
+    Employee.findAll({ include: [{ model: Department }], where: { departmentId: managerDept } }).then(employees => {
+      data.employees = employees;
+      Slots.findAll().then(slots => {
+        // find all slots to fill the dropdowns
+        data.slots = slots;
+        Days.findAll().then(days => {
+          // find all days to fill the Days
+          data.days = days;
+          daySlots
+            .findAll({ attributes: ['id', 'slotId', 'dayId'] })
+            .then(eachDaySlots => {
+              data.eachDaySlots = eachDaySlots;
+              let nextWeek = getDates();
+              data.dates = nextWeek;
+              res.render('manager/manager-schedule', { data });
+            })
+            .catch(err => {
+              next(err);
+            });
+        });
+      });
+    });
+  } else {
+    let errorMsg = { msg: 'You do not have permission for this route' };
+    res.render('errorPage', { errorMsg });
+  }
+};
+module.exports.postManagerSchedule = (req, res, next) => {
+  if (res.locals.manager) {
+    const { sequelize } = req.app.get('models');
+    let rightNow = new Date().toISOString();
+    let output = req.body.slots;
+    let currentEmployeeId = req.session.passport.user.id;
+    let nextWeek = getDates();
+    let sqlQuery = 'INSERT INTO "schedules" ("employeeId", "daySlotId", "date", "createdAt", "updatedAt") values';
+    output.forEach(op => {
+      if (op !== '0') {
+        op = op.split(':');
+        console.log(op);
+        sqlQuery += `(${currentEmployeeId}, ${op[0]}, '${nextWeek[
+          parseInt(op[1]) - 1
+        ]}', '${rightNow}', '${rightNow}'),`;
+      }
+    });
+    sqlQuery = sqlQuery.slice(0, -1);
+    sequelize.query(sqlQuery, { type: sequelize.QueryTypes.INSERT }).then(() => {
+      res.redirect('/manager/generate-schedule');
     });
   } else {
     let errorMsg = { msg: 'You do not have permission for this route' };
@@ -358,7 +429,6 @@ module.exports.getAvailability = (req, res, next) => {
               .findAll({ attributes: ['id', 'slotId', 'dayId'] })
               .then(eachDaySlots => {
                 data.eachDaySlots = eachDaySlots;
-                // res.json(data);
                 res.render('employee/availability', { data });
               })
               .catch(err => {
@@ -446,11 +516,10 @@ module.exports.getUserAvailability = (req, res, next) => {
 };
 
 module.exports.removeSingleAvailability = (req, res, next) => {
-  console.log('Here');
   if (res.locals.employee == true) {
     const currentEmployeeId = req.session.passport.user.id;
     let slotToRemove = req.params.slotId;
-    console.log('slot', slotToRemove);
+
     const { sequelize } = req.app.get('models');
     sequelize
       .query(`DELETE FROM availability WHERE "employeeId"=${currentEmployeeId} AND "daySlotId" = ${slotToRemove}`, {

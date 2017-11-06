@@ -1,17 +1,17 @@
 nav(class="navbar navbar-expand-lg navbar-light bg-light")
   a(class="navbar-brand nav-item" href="/") Scheduler
   -let name = session.passport.user.firstName;
-  h4 Hello #{name}
   //- hamburger button on small screens
   button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation")
     span(class="navbar-toggler-icon")
       //- this div will be inside the hamburger!
   div(class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup")
     //- user info shown only when logged in
-    a(class="btn btn-outline-primary" href="/manager/profile")  Profile
-    a(class="btn btn-outline-primary" href="/manager/generate-schedule")  Schedule
-    a(class="btn btn-outline-primary" href="/manager/add-employee")  Add New Employee
-    a(class="btn btn-outline-primary" href="/manager/manage-employee")  Manage Employee
+    h4 Hello #{name}
+    a( href="/manager/profile")  Profile
+    a( href="/manager/manager-schedule")  Schedule
+    a( href="/manager/add-employee")  Add New Employee
+    a( href="/manager/manage-employee")  Manage Employee
     //- logout button
     form(method="POST" class="form-inline nav-item")
       button(class="btn btn-outline-primary" type="submit" formaction="/logout") Logout
