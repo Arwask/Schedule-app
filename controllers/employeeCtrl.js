@@ -204,7 +204,7 @@ module.exports.newEmployeeForm = (req, res, next) => {
         }).then(titles => {
           data.jobTitle = titles;
           Employee.findOne({
-            attributes: [[sequelize.fn('MAX', sequelize.col('employeeId')), 'lastEmployeeId']]
+            attributes: [[sequelize.fn('MAX', sequelize.col('id')), 'lastEmployeeId']]
           }).then(empId => {
             let randomNumber = Math.floor(Math.random() * 5 + 1);
             const lastId = empId.dataValues.lastEmployeeId;
@@ -240,10 +240,22 @@ module.exports.addNewEmployee = (req, res, next) => {
 
 module.exports.scheduleGrid = (req, res, next) => {
   if (res.locals.manager == true) {
-    const { Employee, Department, Slots, Days, daySlots } = req.app.get('models');
+    //dosomething
+  } else {
+    let errorMsg = { msg: 'You do not have permission for this route' };
+    res.render('errorPage', { errorMsg });
+  }
+};
+
+module.exports.scheduleGeneraterAlgo = (req, res, next) => {
+  if (res.locals.manager == true) {
+    const { Employee, Slots, Days, daySlots } = req.app.get('models');
     const managerDept = req.session.passport.user.departmentId;
     let data = {};
-    Employee.findAll({ include: [{ model: Department }], where: { departmentId: managerDept } }).then(employees => {
+    Employee.findAll({
+      include: [{ model: daySlots, as: 'employeeAvailId' }],
+      where: { departmentId: managerDept }
+    }).then(employees => {
       data.employees = employees;
       Slots.findAll().then(slots => {
         // find all slots to fill the dropdowns
@@ -257,7 +269,8 @@ module.exports.scheduleGrid = (req, res, next) => {
               data.eachDaySlots = eachDaySlots;
               let nextWeek = getDates();
               data.dates = nextWeek;
-              res.render('manager/schedule-grid', { data });
+              res.json(data);
+              // res.render('manager/schedule-grid', { data });
             })
             .catch(err => {
               next(err);
@@ -269,6 +282,10 @@ module.exports.scheduleGrid = (req, res, next) => {
     let errorMsg = { msg: 'You do not have permission for this route' };
     res.render('errorPage', { errorMsg });
   }
+};
+
+module.exports.generateSchedule = (req, res, next) => {
+  res.render('manager/schedule-grid');
 };
 
 let getDates = () => {
@@ -321,11 +338,11 @@ module.exports.postManagerSchedule = (req, res, next) => {
     let output = req.body.slots;
     let currentEmployeeId = req.session.passport.user.id;
     let nextWeek = getDates();
-    let sqlQuery = 'INSERT INTO "schedules" ("employeeId", "daySlotId", "date", "createdAt", "updatedAt") values';
+    let sqlQuery =
+      'INSERT INTO "schedules" ("employeeScheduleId", "daySlotId", "date", "createdAt", "updatedAt") values';
     output.forEach(op => {
       if (op !== '0') {
         op = op.split(':');
-        console.log(op);
         sqlQuery += `(${currentEmployeeId}, ${op[0]}, '${nextWeek[
           parseInt(op[1]) - 1
         ]}', '${rightNow}', '${rightNow}'),`;
@@ -411,7 +428,7 @@ module.exports.getAvailability = (req, res, next) => {
     const currentEmployeeId = req.session.passport.user.id;
     sequelize
       .query(
-        `SELECT "a"."employeeId", "a"."daySlotId" FROM "Employees" "e" JOIN "availability" "a" ON "e"."id" = "a"."employeeId" AND "e"."id" = '${currentEmployeeId}'`,
+        `SELECT "a"."employeeAvailId", "a"."daySlotId" FROM "Employees" "e" JOIN "availability" "a" ON "e"."id" = "a"."employeeAvailId" AND "e"."id" = '${currentEmployeeId}'`,
         {
           type: sequelize.QueryTypes.INSERT
         }
@@ -450,7 +467,7 @@ module.exports.addAvailability = (req, res, next) => {
     const { sequelize } = req.app.get('models');
     const currentEmployeeId = req.session.passport.user.id;
     let date = new Date().toISOString();
-    let queryString = 'INSERT INTO "availability"("daySlotId", "employeeId", "createdAt", "updatedAt") VALUES';
+    let queryString = 'INSERT INTO "availability"("daySlotId", "employeeAvailId", "createdAt", "updatedAt") VALUES';
     data.forEach(chunk => {
       if (chunk !== '0') {
         queryString += `('${chunk}', '${currentEmployeeId}', '${date}', '${date}'),`;
@@ -482,7 +499,7 @@ module.exports.getUserAvailability = (req, res, next) => {
     const currentEmployeeId = req.session.passport.user.id;
     sequelize
       .query(
-        `SELECT "a"."employeeId", "a"."daySlotId" FROM "Employees" "e" JOIN "availability" "a" ON "e"."id" = "a"."employeeId" AND "e"."id" = '${currentEmployeeId}'`,
+        `SELECT "a"."employeeAvailId", "a"."daySlotId" FROM "Employees" "e" JOIN "availability" "a" ON "e"."id" = "a"."employeeAvailId" AND "e"."id" = '${currentEmployeeId}'`,
         {
           type: sequelize.QueryTypes.INSERT
         }
@@ -522,9 +539,12 @@ module.exports.removeSingleAvailability = (req, res, next) => {
 
     const { sequelize } = req.app.get('models');
     sequelize
-      .query(`DELETE FROM availability WHERE "employeeId"=${currentEmployeeId} AND "daySlotId" = ${slotToRemove}`, {
-        type: sequelize.QueryTypes.DELETE
-      })
+      .query(
+        `DELETE FROM availability WHERE "employeeAvailId"=${currentEmployeeId} AND "daySlotId" = ${slotToRemove}`,
+        {
+          type: sequelize.QueryTypes.DELETE
+        }
+      )
       .then(() => {
         res.redirect('back');
       })

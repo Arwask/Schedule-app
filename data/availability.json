@@ -1,18 +1,18 @@
 [
   {
-    "employeeId": 4,
+    "employeeAvailId": 4,
     "daySlotId": 1,
     "createdAt": "2016-11-13 16:30:28.293-06",
     "updatedAt": "2016-11-13 16:30:28.293-06"
   },
   {
-    "employeeId": 4,
+    "employeeAvailId": 4,
     "daySlotId": 4,
     "createdAt": "2016-11-13 16:30:28.293-06",
     "updatedAt": "2016-11-13 16:30:28.293-06"
   },
   {
-    "employeeId": 4,
+    "employeeAvailId": 4,
     "daySlotId": 9,
     "createdAt": "2016-11-13 16:30:28.293-06",
     "updatedAt": "2016-11-13 16:30:28.293-06"

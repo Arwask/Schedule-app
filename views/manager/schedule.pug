@@ -1,0 +1,17 @@
+extends ../layout.pug
+block content
+  .col-12
+    form(action=`/manager/manager-schedule`, method="POST")
+      table(class="table")
+        tbody
+          tr
+            th
+            each day in data.days
+              th #{day.name}
+            tr
+              th
+              each date in data.dates
+                th #{date.slice(0, 10)}
+          each emp in data.employees
+            tr
+              td #{emp.firstName} #{emp.lastName}
