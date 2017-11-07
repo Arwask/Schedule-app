@@ -428,7 +428,7 @@ module.exports.getAvailability = (req, res, next) => {
     const currentEmployeeId = req.session.passport.user.id;
     sequelize
       .query(
-        `SELECT "a"."employeeAvailId", "a"."daySlotId" FROM "Employees" "e" JOIN "availability" "a" ON "e"."id" = "a"."employeeAvailId" AND "e"."id" = '${currentEmployeeId}'`,
+        `SELECT "a"."employeeId", "a"."daySlotId" FROM "Employees" "e" JOIN "availability" "a" ON "e"."id" = "a"."employeeId" AND "e"."id" = '${currentEmployeeId}'`,
         {
           type: sequelize.QueryTypes.INSERT
         }
@@ -466,7 +466,7 @@ module.exports.addAvailability = (req, res, next) => {
     const { sequelize } = req.app.get('models');
     const currentEmployeeId = req.session.passport.user.id;
     let date = new Date().toISOString();
-    let queryString = 'INSERT INTO "availability"("daySlotId", "employeeAvailId", "createdAt", "updatedAt") VALUES';
+    let queryString = 'INSERT INTO "availability"("daySlotId", "employeeId", "createdAt", "updatedAt") VALUES';
     data.forEach(chunk => {
       if (chunk !== '0') {
         queryString += `('${chunk}', '${currentEmployeeId}', '${date}', '${date}'),`;
@@ -497,7 +497,7 @@ module.exports.getUserAvailability = (req, res, next) => {
     const currentEmployeeId = req.session.passport.user.id;
     sequelize
       .query(
-        `SELECT "a"."employeeAvailId", "a"."daySlotId" FROM "Employees" "e" JOIN "availability" "a" ON "e"."id" = "a"."employeeAvailId" AND "e"."id" = '${currentEmployeeId}'`,
+        `SELECT "a"."employeeId", "a"."daySlotId" FROM "Employees" "e" JOIN "availability" "a" ON "e"."id" = "a"."employeeId" AND "e"."id" = '${currentEmployeeId}'`,
         {
           type: sequelize.QueryTypes.INSERT
         }
@@ -537,12 +537,9 @@ module.exports.removeSingleAvailability = (req, res, next) => {
 
     const { sequelize } = req.app.get('models');
     sequelize
-      .query(
-        `DELETE FROM availability WHERE "employeeAvailId"=${currentEmployeeId} AND "daySlotId" = ${slotToRemove}`,
-        {
-          type: sequelize.QueryTypes.DELETE
-        }
-      )
+      .query(`DELETE FROM availability WHERE "employeeId"=${currentEmployeeId} AND "daySlotId" = ${slotToRemove}`, {
+        type: sequelize.QueryTypes.DELETE
+      })
       .then(() => {
         res.redirect('back');
       })

@@ -381,24 +381,11 @@ module.exports.postManagerSchedule = (req, res, next) => {
 
 module.exports.generateSchedule = (req, res, next) => {
   if (res.locals.manager == true) {
-    const { Employee, sequelize, Days, daySlots, Slots } = req.app.get('models');
+    const { Employee, Slots, Days, daySlots, sequelize } = req.app.get('models');
     const managerDept = req.session.passport.user.departmentId;
     let data = {};
-    Employee.findAll({ include: [{ model: daySlots }], where: { departmentId: managerDept } }).then(employees => {
+    Employee.findAll({ where: { departmentId: managerDept } }).then(employees => {
       data.employees = employees;
-      // res.json(data);
-      let idArr = '';
-      employees.forEach(emp => {
-        idArr += `${emp.id},`;
-      });
-      idArr = idArr.slice(0, -1);
-      sequelize
-        .query(`SELECT * FROM "schedules" WHERE "employeeId" IN (${idArr})`, {
-          type: sequelize.QueryTypes.SELECT
-        })
-        .then(schedules => {
-          data.schedules = schedules;
-        });
       Slots.findAll().then(slots => {
         // find all slots to fill the dropdowns
         data.slots = slots;
@@ -410,12 +397,38 @@ module.exports.generateSchedule = (req, res, next) => {
             .then(eachDaySlots => {
               data.eachDaySlots = eachDaySlots;
               let nextWeek = getDates();
+              let allDates = '';
+              let allEmps = '';
+              nextWeek.forEach(date => {
+                allDates += `'${date}',`;
+              });
+              data.employees.forEach(emp => {
+                allEmps += `'${emp.id}',`;
+              });
+              allEmps = allEmps.slice(0, -1);
+              allDates = allDates.slice(0, -1);
               data.dates = nextWeek;
-              // res.json(data);
-              // runScheduleAlgo(req, res, next, data);
-              res.render('manager/schedule', { data });
-              // get all saved data from the schedule table
-              // render it in table format
+              sequelize
+                .query(`SELECT * FROM "availability" WHERE "employeeId" IN(${allEmps})`, {
+                  type: sequelize.QueryTypes.INSERT
+                })
+                .then(avails => {
+                  if (avails[0].length > 0) {
+                    data.avail = avails[0];
+                    // res.render('manager/manager-schedule', { data });
+                  }
+                  sequelize
+                    .query(`SELECT * FROM "schedules" WHERE "employeeId" IN(${allEmps}) AND "date" IN (${allDates})`, {
+                      type: sequelize.QueryTypes.INSERT
+                    })
+                    .then(sched => {
+                      if (sched[0].length > 0) {
+                        data.schedule = sched[0];
+                      }
+                      // res.json(data);
+                      res.render('manager/schedule', { data });
+                    });
+                });
             })
             .catch(err => {
               next(err);
@@ -428,6 +441,53 @@ module.exports.generateSchedule = (req, res, next) => {
     res.render('errorPage', { errorMsg });
   }
 };
+//     const { Employee, sequelize, Days, daySlots, Slots } = req.app.get('models');
+//     const managerDept = req.session.passport.user.departmentId;
+//     let data = {};
+//     Employee.findAll({ include: [{ model: daySlots }], where: { departmentId: managerDept } }).then(employees => {
+//       data.employees = employees;
+//       // res.json(data);
+//       let idArr = '';
+//       employees.forEach(emp => {
+//         idArr += `${emp.id},`;
+//       });
+//       idArr = idArr.slice(0, -1);
+//       sequelize
+//         .query(`SELECT * FROM "schedules" WHERE "employeeId" IN (${idArr})`, {
+//           type: sequelize.QueryTypes.SELECT
+//         })
+//         .then(schedules => {
+//           data.schedules = schedules;
+//         });
+//       Slots.findAll().then(slots => {
+//         // find all slots to fill the dropdowns
+//         data.slots = slots;
+//         Days.findAll().then(days => {
+//           // find all days to fill the Days
+//           data.days = days;
+//           daySlots
+//             .findAll({ attributes: ['id', 'slotId', 'dayId'] })
+//             .then(eachDaySlots => {
+//               data.eachDaySlots = eachDaySlots;
+//               let nextWeek = getDates();
+//               data.dates = nextWeek;
+//               // res.json(data);
+//               // runScheduleAlgo(req, res, next, data);
+//               res.render('manager/schedule', { data });
+//               // get all saved data from the schedule table
+//               // render it in table format
+//             })
+//             .catch(err => {
+//               next(err);
+//             });
+//         });
+//       });
+//     });
+//   } else {
+//     let errorMsg = { msg: 'You do not have permission for this route' };
+//     res.render('errorPage', { errorMsg });
+//   }
+// };
 
 module.exports.scheduleGeneraterAlgo = (req, res, next) => {};
 

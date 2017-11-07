@@ -27,6 +27,7 @@
     "jquery": "^3.2.1",
     "jsdoc": "^3.5.5",
     "method-override": "^2.3.10",
+    "multi-select-dropdown": "0.0.2",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pg": "^7.3.0",
