@@ -10,15 +10,13 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'employeeId',
       through: 'schedules',
       onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-      as: 'employeeScheduleId'
+      onUpdate: 'CASCADE'
     });
     daySlots.belongsToMany(models.Employee, {
       foreignKey: 'employeeId',
       through: 'availability',
       onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-      as: 'employeeAvailId'
+      onUpdate: 'CASCADE'
     });
   };
   return daySlots;

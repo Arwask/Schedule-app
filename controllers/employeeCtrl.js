@@ -462,7 +462,6 @@ module.exports.getAvailability = (req, res, next) => {
 
 module.exports.addAvailability = (req, res, next) => {
   let data = req.body.slots;
-  // res.json(data);
   if (res.locals.employee == true) {
     const { sequelize } = req.app.get('models');
     const currentEmployeeId = req.session.passport.user.id;
@@ -474,7 +473,6 @@ module.exports.addAvailability = (req, res, next) => {
       }
     });
     queryString = queryString.slice(0, -1);
-    console.log('What is the string here?', queryString);
     sequelize
       .query(queryString, {
         type: sequelize.QueryTypes.INSERT

@@ -41,7 +41,7 @@ router.get('/manager/manager-schedule', isLoggedIn, isManager, getManagerSchedul
 router.post('/manager/manager-schedule', isLoggedIn, isManager, postManagerSchedule); // posting the manager schedule
 router.get('/manager/generate-schedule', isLoggedIn, isManager, generateSchedule); // generate button page
 router.get('/manager/edit-schedule', isLoggedIn, isManager, scheduleGrid);
-// router.get('/manager/schedule', isLoggedIn, isManager, scheduleGeneraterAlgo);
+router.get('/manager/schedule', isLoggedIn, isManager, scheduleGeneraterAlgo);
 
 module.exports = router;
 

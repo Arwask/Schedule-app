@@ -18,7 +18,6 @@ block content
                         if(slot.id == ds.slotId)
                           td
                             h6 (#{slot.startTime} - #{slot.endTime})
-                            -console.log("id??",avail.daySlotId)
                           td
                             form(action=`/employee/remove-availability/${avail.daySlotId}?_method=DELETE`, method="post")
                               button(type="submit" class="btn btn-outline-danger") X

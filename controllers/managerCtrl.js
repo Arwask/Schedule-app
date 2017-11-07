@@ -299,8 +299,9 @@ let getDates = () => {
 
 module.exports.getManagerSchedule = (req, res, next) => {
   if (res.locals.manager == true) {
-    const { Employee, Department, Slots, Days, daySlots } = req.app.get('models');
+    const { Employee, Department, Slots, Days, daySlots, sequelize } = req.app.get('models');
     const managerDept = req.session.passport.user.departmentId;
+    const managerId = req.session.passport.user.id;
     let data = {};
     Employee.findAll({ include: [{ model: Department }], where: { departmentId: managerDept } }).then(employees => {
       data.employees = employees;
@@ -310,17 +311,35 @@ module.exports.getManagerSchedule = (req, res, next) => {
         Days.findAll().then(days => {
           // find all days to fill the Days
           data.days = days;
-          daySlots
-            .findAll({ attributes: ['id', 'slotId', 'dayId'] })
-            .then(eachDaySlots => {
-              data.eachDaySlots = eachDaySlots;
-              let nextWeek = getDates();
-              data.dates = nextWeek;
-              res.render('manager/manager-schedule', { data });
-            })
-            .catch(err => {
-              next(err);
+          daySlots.findAll({ attributes: ['id', 'slotId', 'dayId'] }).then(eachDaySlots => {
+            data.eachDaySlots = eachDaySlots;
+            let nextWeek = getDates();
+            let allDates = '';
+            nextWeek.forEach(date => {
+              allDates += `'${date}',`;
             });
+            allDates = allDates.slice(0, -1);
+            data.dates = nextWeek;
+            sequelize
+              .query(`SELECT * FROM "schedules" WHERE "employeeId" = ${managerId} AND "date" IN (${allDates})`, {
+                type: sequelize.QueryTypes.INSERT
+              })
+              .then(avails => {
+                if (avails[0].length > 0) {
+                  data.schedule = avails[0];
+                  data.display = true;
+                  // res.json(data);
+                  res.render('manager/manager-schedule', { data });
+                } else {
+                  // res.json(data);
+                  data.display = false;
+                  res.render('manager/manager-schedule', { data });
+                }
+              })
+              .catch(err => {
+                next(err);
+              });
+          });
         });
       });
     });
@@ -343,7 +362,6 @@ module.exports.postManagerSchedule = (req, res, next) => {
     output.forEach(op => {
       if (op !== '0') {
         op = op.split(':');
-        console.log(op);
         sqlQuery += `(${currentEmployeeId}, ${op[0]}, '${nextWeek[
           parseInt(op[1]) - 1
         ]}', '${rightNow}', '${rightNow}'),`;
@@ -363,7 +381,7 @@ module.exports.postManagerSchedule = (req, res, next) => {
 
 module.exports.generateSchedule = (req, res, next) => {
   if (res.locals.manager == true) {
-    const { Employee, sequelize, Slots, Days, daySlots } = req.app.get('models');
+    const { Employee, sequelize, Days, daySlots, Slots } = req.app.get('models');
     const managerDept = req.session.passport.user.departmentId;
     let data = {};
     Employee.findAll({ include: [{ model: daySlots }], where: { departmentId: managerDept } }).then(employees => {
@@ -381,88 +399,90 @@ module.exports.generateSchedule = (req, res, next) => {
         .then(schedules => {
           data.schedules = schedules;
         });
-      // Slots.findAll().then(slots => {
-      //   // find all slots to fill the dropdowns
-      //   data.slots = slots;
-      Days.findAll().then(days => {
-        // find all days to fill the Days
-        data.days = days;
-        daySlots
-          .findAll({ attributes: ['id', 'slotId', 'dayId'] })
-          .then(eachDaySlots => {
-            data.eachDaySlots = eachDaySlots;
-            let nextWeek = getDates();
-            data.dates = nextWeek;
-            res.json(data);
-            runScheduleAlgo(req, res, next, data);
-            // res.render('manager/schedule', { data });
-            // get all saved data from the schedule table
-            // render it in table format
-          })
-          .catch(err => {
-            next(err);
-          });
+      Slots.findAll().then(slots => {
+        // find all slots to fill the dropdowns
+        data.slots = slots;
+        Days.findAll().then(days => {
+          // find all days to fill the Days
+          data.days = days;
+          daySlots
+            .findAll({ attributes: ['id', 'slotId', 'dayId'] })
+            .then(eachDaySlots => {
+              data.eachDaySlots = eachDaySlots;
+              let nextWeek = getDates();
+              data.dates = nextWeek;
+              // res.json(data);
+              // runScheduleAlgo(req, res, next, data);
+              res.render('manager/schedule', { data });
+              // get all saved data from the schedule table
+              // render it in table format
+            })
+            .catch(err => {
+              next(err);
+            });
+        });
       });
     });
-    // });
   } else {
     let errorMsg = { msg: 'You do not have permission for this route' };
     res.render('errorPage', { errorMsg });
   }
 };
 
-let runScheduleAlgo = (req, res, next, data) => {
-  let empIdArray = [];
-  // let schedule = {};
-  // let fs = require('fs');
-  const { Employee, daySlots, sequelize } = req.app.get('models');
-  data.employees.forEach(employee => {
-    //make an array of employee's ids
-    empIdArray.push(employee.id);
-  });
-  data.days.forEach(day => {
-    // for each day, select a random employee
-    let schedule = [];
-    let empDayArray = []; //each day's employee Array;
-    let randomEmp;
-    let randomEmployee = () => {
-      let randomNumber = Math.floor(Math.random() * empIdArray.length);
-      randomEmp = empIdArray[randomNumber];
-    };
+module.exports.scheduleGeneraterAlgo = (req, res, next) => {};
 
-    for (let i = 0; empDayArray.length <= empIdArray.length; i++) {
-      randomEmployee();
-      if (empDayArray.indexOf(randomEmp) == -1) {
-        // if the employee has not been already randomly chosen once
-        empDayArray.push(randomEmp); // push the id in an array
-      } else randomEmp = randomEmployee(); // else choose another
-      // get all their information
-      schedule.push(
-        new Promise((resolve, reject) => {
-          sequelize
-            .query(
-              `SELECT * FROM "availability" "a" JOIN "daySlots" "d" ON "d"."id" = "a"."daySlotId" WHERE "a"."employeeId"=${randomEmp} AND "d"."dayId" = ${day.id}`
-            )
-            .then(avail => {
-              schedule.avail = avail;
-              resolve(schedule);
-            })
-            .catch(err => {
-              reject(err);
-            });
-        })
-        //   }
-        // })
-      );
-      Promise.all(schedule, scheduleData => {
-        res.json(scheduleData);
-      });
-      //get all of their availabilities
-      //for all the slots on that day
-      // check if randomemp's avail.dayslotId == currentSlotId
-      // save it to database
-      // check to see if the whole day is occupied?
-      // res.json(data);
-    }
-  });
-};
+// let runScheduleAlgo = (req, res, next, data) => {
+//   let empIdArray = [];
+//   // let schedule = {};
+//   // let fs = require('fs');
+//   const { Employee, daySlots, sequelize } = req.app.get('models');
+//   data.employees.forEach(employee => {
+//     //make an array of employee's ids
+//     empIdArray.push(employee.id);
+//   });
+//   data.days.forEach(day => {
+//     // for each day, select a random employee
+//     let schedule = [];
+//     let empDayArray = []; //each day's employee Array;
+//     let randomEmp;
+//     let randomEmployee = () => {
+//       let randomNumber = Math.floor(Math.random() * empIdArray.length);
+//       randomEmp = empIdArray[randomNumber];
+//     };
+
+//     for (let i = 0; empDayArray.length <= empIdArray.length; i++) {
+//       randomEmployee();
+//       if (empDayArray.indexOf(randomEmp) == -1) {
+//         // if the employee has not been already randomly chosen once
+//         empDayArray.push(randomEmp); // push the id in an array
+//       } else randomEmp = randomEmployee(); // else choose another
+//       // get all their information
+//       schedule.push(
+//         new Promise((resolve, reject) => {
+//           sequelize
+//             .query(
+//               `SELECT * FROM "availability" "a" JOIN "daySlots" "d" ON "d"."id" = "a"."daySlotId" WHERE "a"."employeeId"=${randomEmp} AND "d"."dayId" = ${day.id}`
+//             )
+//             .then(avail => {
+//               schedule.avail = avail;
+//               resolve(schedule);
+//             })
+//             .catch(err => {
+//               reject(err);
+//             });
+//         })
+//         //   }
+//         // })
+//       );
+//       Promise.all(schedule, scheduleData => {
+//         res.json(scheduleData);
+//       });
+//       //get all of their availabilities
+//       //for all the slots on that day
+//       // check if randomemp's avail.dayslotId == currentSlotId
+//       // save it to database
+//       // check to see if the whole day is occupied?
+//       // res.json(data);
+//     }
+//   });
+// }
