@@ -3,12 +3,9 @@
 const { Router } = require('express');
 const router = Router();
 // const
-const { displayRegister, displayLogin, register, login, logout, isManager } = require('../controllers/authCtrl.js');
+const { displayLogin, login, logout, isManager } = require('../controllers/authCtrl.js');
 
 const { displayIndex } = require('../controllers/employeeCtrl');
-// new users
-router.get('/register', displayRegister);
-router.post('/register', register);
 // login existing users
 router.get('/login', displayLogin);
 router.post('/login', login);

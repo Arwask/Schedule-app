@@ -1,7 +1,7 @@
 extends ../layout.pug
 block content
   .col-8
-    form(action='/manager/add-employee', method="POST")
+    form(action=`/manager/add-employee/${data.employeeId}`, method="POST")
       table(class="table")
         tbody
           tr
@@ -20,7 +20,8 @@ block content
               h1 Employment Details
           tr
             th Employee ID
-            td #{data.newEmployeeId}
+            td
+              input(type="text", name="employeeId" value=`${data.employeeId}` disabled)
           tr
             th Department
             td
