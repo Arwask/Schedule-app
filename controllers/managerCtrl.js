@@ -286,12 +286,14 @@ module.exports.scheduleGrid = (req, res, next) => {
 let getDates = () => {
   let today = new Date();
   let day = today.getDay();
-  let nearestSunday = new Date(new Date().getTime() + (7 - day) * 24 * 60 * 60 * 1000);
+  let nearestSunday = new Date(new Date().getTime() + (7 - day - 1) * 24 * 60 * 60 * 1000);
+  console.log(nearestSunday);
 
   let nextWeek = [nearestSunday.toISOString().slice(0, 10)];
   for (let i = 1; i < 7; i++) {
     nextWeek.push(new Date(nearestSunday.getTime() + i * 24 * 60 * 60 * 1000).toISOString().slice(0, 10));
   }
+  console.log('next week', nextWeek);
   return nextWeek;
 };
 
@@ -441,6 +443,93 @@ module.exports.generateSchedule = (req, res, next) => {
     res.render('errorPage', { errorMsg });
   }
 };
+
+module.exports.makeSchedule = (req, res, next) => {
+  if (res.locals.manager) {
+    const { sequelize } = req.app.get('models');
+    // res.json(req.body);
+    let getDateFromDay = day => {
+      let nextWeek = getDates();
+      return nextWeek[day - 1];
+    };
+    let data = req.body.slots;
+    data.forEach(piece => {
+      if (piece !== '0') {
+        piece = piece.split(':');
+        let employeeId = piece[0];
+        let daySlotId = piece[1];
+        let date = getDateFromDay(piece[2]);
+        let today = new Date().toISOString();
+        sequelize
+          .query(
+            `INSERT INTO "schedules"("employeeId", "daySlotId", "date", "createdAt", "updatedAt") VALUES('${employeeId}', '${daySlotId}', '${date}', '${today}', '${today}')`,
+            {
+              type: sequelize.QueryTypes.INSERT
+            }
+          )
+          .then(() => {
+            res.redirect('/manager/view-schedule');
+          });
+      }
+    });
+  } else {
+    let errorMsg = { msg: 'You do not have permission for this route' };
+    res.render('errorPage', { errorMsg });
+  }
+};
+
+module.exports.displaySchedule = (req, res, next) => {
+  if (res.locals.manager) {
+    const { Employee, Slots, Days, daySlots, sequelize } = req.app.get('models');
+    const managerDept = req.session.passport.user.departmentId;
+    let data = {};
+    Employee.findAll({ where: { departmentId: managerDept } }).then(employees => {
+      data.employees = employees;
+      Slots.findAll().then(slots => {
+        // find all slots to fill the dropdowns
+        data.slots = slots;
+        Days.findAll()
+          .then(days => {
+            // find all days to fill the Days
+            data.days = days;
+            daySlots.findAll({ attributes: ['id', 'slotId', 'dayId'] }).then(eachDaySlots => {
+              data.eachDaySlots = eachDaySlots;
+              let nextWeek = getDates();
+              let allDates = '';
+              let allEmps = '';
+              nextWeek.forEach(date => {
+                allDates += `'${date}',`;
+              });
+              data.employees.forEach(emp => {
+                allEmps += `'${emp.id}',`;
+              });
+              allEmps = allEmps.slice(0, -1);
+              allDates = allDates.slice(0, -1);
+              data.dates = nextWeek;
+              sequelize
+                .query(`SELECT * FROM "schedules" WHERE "employeeId" IN(${allEmps}) AND "date" IN (${allDates})`, {
+                  type: sequelize.QueryTypes.INSERT
+                })
+                .then(sched => {
+                  if (sched[0].length > 0) {
+                    data.schedule = sched[0];
+                  }
+                  // res.json(data);
+                  res.render('manager/schedule-view', { data });
+                });
+            });
+          })
+          .catch(err => {
+            next(err);
+          });
+      });
+    });
+  } else {
+    let errorMsg = { msg: 'You do not have permission for this route' };
+    res.render('errorPage', { errorMsg });
+  }
+};
+
 //     const { Employee, sequelize, Days, daySlots, Slots } = req.app.get('models');
 //     const managerDept = req.session.passport.user.departmentId;
 //     let data = {};

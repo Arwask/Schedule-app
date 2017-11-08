@@ -32,6 +32,10 @@ $('.search-products-btn').on('click', function(e) {
   window.location.href = queryStringAction;
 });
 
-$('.multiselect-ui').multiselect({
-  includeSelectAllOption: true
+$(document).ready(function() {
+  $('.multiselect-ui').multiselect({
+    includeSelectAllOption: true,
+    maxHeight: 400,
+    dropUp: true
+  });
 });

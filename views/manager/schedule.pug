@@ -1,7 +1,7 @@
 extends ../layout.pug
 block content
   .col-12
-    form(action=`/manager/manager-schedule`, method="POST")
+    form(action=`/manager/schedule`, method="POST")
       table(class="table")
         tbody
           tr
@@ -31,6 +31,8 @@ block content
                                     //- for each slot in all slots
                                     if(s.id == ds.slotId)
                                       //- if that slot's id matched to the slotId on slots for day then print it
-                                      option(class="dropdown-item" href="#" name=`day` id='dayId' value=`${ds.id}`) #{s.startTime} - #{s.endTime}
+                                      option(class="dropdown-item" href="#" name=`day` id='dayId' value=`${emp.id}:${ds.id}:${day.id}`) #{s.startTime} - #{s.endTime}
+      button(type="submit" class="btn btn-success") Done
+
 
 
