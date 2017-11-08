@@ -34,14 +34,16 @@ block content
                   button(type="submit") Save
                 else
                   each day in data.days
+                    -let entry = "OFF"
                     each avail in data.schedule
                       each ds in data.eachDaySlots
                         if(avail.daySlotId === ds.id)
                           if(day.id == ds.dayId)
                             each slot in data.slots
                               if(slot.id == ds.slotId)
-                                td
-                                  h6 (#{slot.startTime} - #{slot.endTime})
+                                - entry = `${slot.startTime} - ${slot.endTime}`
+                    td
+                      h6 #{entry}
                   tr
                     td
                       a(class="btn btn-outline-success" href="/manager/generate-schedule") Next
