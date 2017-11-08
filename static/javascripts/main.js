@@ -1,7 +1,5 @@
 'use strict';
-
-// upload progress bar
-let $uploader = $('#uploader');
+console.log('hi');
 
 $('#fileInput').on('change', event => {
   let file = event.target.files[0];
@@ -25,17 +23,9 @@ $('#fileInput').on('change', event => {
 });
 
 // search handling
-$('.search-products-btn').on('click', function(e) {
-  e.preventDefault();
-  var searchInput = $('.product-search-input').val();
-  let queryStringAction = `/products?title=${searchInput}`;
-  window.location.href = queryStringAction;
-});
 
-$(document).ready(function() {
-  $('.multiselect-ui').multiselect({
-    includeSelectAllOption: true,
-    maxHeight: 400,
-    dropUp: true
-  });
+$('.print-button').click(function(e) {
+  console.log('here??');
+  window.print();
+  return false; // why false?
 });

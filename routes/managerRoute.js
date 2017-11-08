@@ -19,7 +19,8 @@ const {
   generateSchedule,
   scheduleGeneraterAlgo,
   makeSchedule,
-  displaySchedule
+  displaySchedule,
+  editSchedule
 } = require('../controllers/managerCtrl');
 
 const { isManager } = require('../controllers/authCtrl');
@@ -43,6 +44,7 @@ router.get('/manager/manager-schedule', isLoggedIn, isManager, getManagerSchedul
 router.post('/manager/manager-schedule', isLoggedIn, isManager, postManagerSchedule); // posting the manager schedule
 router.get('/manager/generate-schedule', isLoggedIn, isManager, generateSchedule); // generate button page
 router.get('/manager/edit-schedule', isLoggedIn, isManager, scheduleGrid);
+router.post('/manager/edit-schedule', isLoggedIn, isManager, editSchedule);
 router.get('/manager/schedule', isLoggedIn, isManager, scheduleGeneraterAlgo);
 router.post('/manager/schedule', isLoggedIn, isManager, makeSchedule);
 router.get('/manager/view-schedule', isLoggedIn, isManager, displaySchedule);

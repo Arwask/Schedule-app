@@ -28,3 +28,12 @@ block content
                           - entry = `${slot.startTime} - ${slot.endTime}`
             td
               h6 #{entry}
+      tr
+        td
+          button(type="button" class='btn btn-outline-success print-button' ) Print Schedule
+          // - source : https://codepen.io/sheriffderek/pen/Jdxpi
+        td
+          a(class="btn btn-outline-success" href="/manager/edit-schedule") Edit Schedule
+  script(src='/public/lib/jQuery/jquery.js')
+  script(src='/public/javascripts/main.js')
+
