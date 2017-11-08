@@ -1,0 +1,49 @@
+extends ../layout.pug
+block content
+  .col-12
+    table(class="table")
+      tbody
+        tr
+          th
+          each day in data.days
+            th #{day.name}
+          tr
+            th
+            each date in data.dates
+              th #{date.slice(0, 10)}
+        each emp in data.employees
+          tr
+            if(emp.jobTitle == 'manager')
+              form(action=`/manager/manager-schedule`, method="POST")
+                td #{emp.firstName} #{emp.lastName}
+                if(data.display == false)
+                  each day in data.days
+                    td
+                      select(class="btn btn-light dropdown-toggle" #propertyType.select.form-control.input-lg name='slots')
+                        div(class="dropdown-menu" aria-labelledby="dropdownMenuButton")
+                          option(class="dropdown-item" href="#" name=`day` id='dayId' value=0) --select--
+                            each ds in data.eachDaySlots
+                              //- for each slot for a day
+                              if(ds.dayId == day.id)
+                                //- if the day's id matches to the dayId on slot
+                                each s in data.slots
+                                  //- for each slot in all slots
+                                  if(s.id == ds.slotId)
+                                    //- if that slot's id matched to the slotId on slots for day then print it
+                                    option(class="dropdown-item" href="#" name=`day` id='dayId' value=`${ds.id}:${day.id}`) #{s.startTime} - #{s.endTime}
+                  button(type="submit") Save
+                else
+                  each day in data.days
+                    -let entry = "OFF"
+                    each avail in data.schedule
+                      each ds in data.eachDaySlots
+                        if(avail.daySlotId === ds.id)
+                          if(day.id == ds.dayId)
+                            each slot in data.slots
+                              if(slot.id == ds.slotId)
+                                - entry = `${slot.startTime} - ${slot.endTime}`
+                    td
+                      h6 #{entry}
+                  tr
+                    td
+                      a(class="btn btn-outline-success" href="/manager/generate-schedule") Next

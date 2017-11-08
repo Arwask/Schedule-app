@@ -7,13 +7,13 @@ module.exports = (sequelize, DataTypes) => {
 
   daySlots.associate = function(models) {
     daySlots.belongsToMany(models.Employee, {
-      foreignKey: 'daySlotId',
+      foreignKey: 'employeeId',
       through: 'schedules',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     });
     daySlots.belongsToMany(models.Employee, {
-      foreignKey: 'daySlotId',
+      foreignKey: 'employeeId',
       through: 'availability',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'

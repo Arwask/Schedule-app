@@ -1,0 +1,9 @@
+extends ../layout.pug
+block content
+  .col-12
+    form(action=`/manager/schedule`, method="GET")
+      table(class="table")
+        tbody
+          tr
+            td
+              button(type="submit") Generate

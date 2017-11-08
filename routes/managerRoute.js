@@ -12,8 +12,15 @@ const {
   getManagerEditForm,
   editManagerProfile,
   newEmployeeForm,
-  addNewEmployee
-} = require('../controllers/employeeCtrl');
+  addNewEmployee,
+  scheduleGrid,
+  getManagerSchedule,
+  postManagerSchedule,
+  generateSchedule,
+  scheduleGeneraterAlgo,
+  makeSchedule,
+  displaySchedule
+} = require('../controllers/managerCtrl');
 
 const { isManager } = require('../controllers/authCtrl');
 //list all employees
@@ -29,7 +36,17 @@ router.get('/manager/edit-manager/:managerId', isLoggedIn, isManager, getManager
 router.post('/manager/edit-manager/:managerId', isLoggedIn, isManager, editManagerProfile);
 // add new employee
 router.get('/manager/add-employee', isLoggedIn, isManager, newEmployeeForm);
-router.post('/manager/add-employee', isLoggedIn, isManager, addNewEmployee);
+router.post('/manager/add-employee/:employeeId', isLoggedIn, isManager, addNewEmployee);
+
+//schedule routes
+router.get('/manager/manager-schedule', isLoggedIn, isManager, getManagerSchedule); //form for schedule
+router.post('/manager/manager-schedule', isLoggedIn, isManager, postManagerSchedule); // posting the manager schedule
+router.get('/manager/generate-schedule', isLoggedIn, isManager, generateSchedule); // generate button page
+router.get('/manager/edit-schedule', isLoggedIn, isManager, scheduleGrid);
+router.get('/manager/schedule', isLoggedIn, isManager, scheduleGeneraterAlgo);
+router.post('/manager/schedule', isLoggedIn, isManager, makeSchedule);
+router.get('/manager/view-schedule', isLoggedIn, isManager, displaySchedule);
+
 module.exports = router;
 
 function isLoggedIn(req, res, next) {

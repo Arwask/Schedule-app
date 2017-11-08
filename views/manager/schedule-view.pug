@@ -1,0 +1,31 @@
+extends ../layout.pug
+block content
+  .col-12
+  //- form(action=`/manager/schedule`, method="POST")
+  table(class="table")
+    tbody
+      tr
+        th
+        each day in data.days
+          th #{day.name}
+        tr
+          th
+          each date in data.dates
+            th #{date}
+      each emp in data.employees
+        tr
+          td #{emp.firstName} #{emp.lastName}
+          td
+            each date in data.dates
+              each sched in data.schedule
+                - let d = sched.date.toISOString().slice(0,10);
+                if(sched.employeeId == emp.id)
+                  if(d == date)
+                    each ds in data.eachDaySlots
+                      if(sched.daySlotId === ds.id)
+                        //- - console.log(emp.id, date, sched.daySlotId)
+                        each slot in data.slots
+                          //- if(day.id == ds.dayId)
+                          if(slot.id == ds.slotId)
+                            td
+                              h6 (#{slot.startTime} - #{slot.endTime})

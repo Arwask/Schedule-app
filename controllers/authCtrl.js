@@ -63,7 +63,7 @@ module.exports.login = (req, res, next) => {
       next(err);
     } //or return next(err) once handler set up in app.js
     if (!user) {
-      return res.render('profile', msgObj);
+      return res.render('../views/partials/login-form', msgObj);
     }
     req.logIn(user, err => {
       if (err) {
@@ -89,7 +89,7 @@ module.exports.isManager = (req, res, next) => {
   } else if (req.session.passport.user.jobTitle == 'part-time' || req.session.passport.user.jobTitle == 'full-time') {
     res.locals.employee = true;
     return next();
-  } else res.render('/login');
+  } else res.render('../partials/login');
 };
 
 /**
