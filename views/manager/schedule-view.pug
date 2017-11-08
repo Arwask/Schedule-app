@@ -15,17 +15,16 @@ block content
       each emp in data.employees
         tr
           td #{emp.firstName} #{emp.lastName}
-          td
-            each date in data.dates
-              each sched in data.schedule
-                - let d = sched.date.toISOString().slice(0,10);
-                if(sched.employeeId == emp.id)
-                  if(d == date)
-                    each ds in data.eachDaySlots
-                      if(sched.daySlotId === ds.id)
-                        //- - console.log(emp.id, date, sched.daySlotId)
-                        each slot in data.slots
-                          //- if(day.id == ds.dayId)
-                          if(slot.id == ds.slotId)
-                            td
-                              h6 (#{slot.startTime} - #{slot.endTime})
+          each day in data.days
+            -let entry = "OFF"
+            each avail in data.schedule
+              if(avail.employeeId === emp.id)
+                each ds in data.eachDaySlots
+                  if(avail.daySlotId === ds.id)
+                    if(day.id === ds.dayId)
+                      -console.log(avail.daySlotId, ds.id, emp.id, day.id, ds.dayId)
+                      each slot in data.slots
+                        if(slot.id == ds.slotId)
+                          - entry = `${slot.startTime} - ${slot.endTime}`
+            td
+              h6 #{entry}
