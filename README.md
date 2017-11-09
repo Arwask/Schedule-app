@@ -1,5 +1,5 @@
 # fuzzyFatCat
-### An app that allows user to make shopping list directly out of thousands of amazing recipes.
+### An App that takes the hard work out of scheduling so that you can focus on things that matter.
 
 ## <p style="color: green;">Table of Contents</p>
 - [Introduction](#introduction)
@@ -9,9 +9,11 @@
 - [How to get started?](#how-to-get-started)
 
 ## <p style="color: green;">Introduction</p>
+This App is my back-end capstone project for Nashville Software School. I built it to demonstrate my abilities to build a full stack application.
+
 This app's main aim is to help managers ease their process of making schedules for employees working in their department.
 
-App has two views:
+This App has two main views:
 - Manager's view
 - Employee's View
 
