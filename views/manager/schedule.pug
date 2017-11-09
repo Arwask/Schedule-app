@@ -18,9 +18,9 @@ block content
                 td #{emp.firstName} #{emp.lastName}
                 each day in data.days
                   td
-                    select(class="btn btn-light dropdown-toggle multiselect-ui form-control" #propertyType.select.form-control.input-lg name='slots')
+                    select(class="btn btn-light dropdown-toggle multiselect-ui form-control test" #propertyType.select.form-control.input-lg name='slots')
                       div(class="dropdown-menu" aria-labelledby="dropdownMenuButton")
-                        option(class="dropdown-item" href="#" name=`day` id='dayId' value=0) --select--
+                        option(class="dropdown-item" href="#" name=`day` id='dayId' value=0) OFF
                           each ds in data.eachDaySlots
                             //- for each slot for a day
                             each avail in data.avail
@@ -31,8 +31,10 @@ block content
                                     //- for each slot in all slots
                                     if(s.id == ds.slotId)
                                       //- if that slot's id matched to the slotId on slots for day then print it
-                                      option(class="dropdown-item" href="#" name=`day` id='dayId' value=`${emp.id}:${ds.id}:${day.id}`) #{s.startTime} - #{s.endTime}
+                                      option(class="dropdown-item test2" href="#" name=`day` id=`${emp.id}${ds.id}` value=`${emp.id}:${ds.id}:${day.id}:${s.id}`) #{s.startTime} - #{s.endTime}
       button(type="submit" class="btn btn-success") Done
+      script(src='/public/lib/jQuery/jquery.js')
+      script(src='/public/javascripts/main.js')
 
 
 
