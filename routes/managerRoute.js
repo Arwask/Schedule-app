@@ -17,7 +17,6 @@ const {
   getManagerSchedule,
   postManagerSchedule,
   generateSchedule,
-  scheduleGeneraterAlgo,
   makeSchedule,
   displaySchedule,
   editSchedule

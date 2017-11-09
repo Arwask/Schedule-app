@@ -9,9 +9,9 @@ nav(class="navbar navbar-expand-lg navbar-light bg-light")
   div(class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup")
     //- if session.passport
     //- user info shown only when logged in
-    a(class="btn btn-outline-primary" href="/employee/availability-view")  Availability
-
-    a(class="btn btn-outline-primary" href="/employee/profile")  Profile
+    a( href="/employee/profile")  Profile
+    a( href="/employee/availability-view")  Availability
+    a( href="/change-password")  Change Password
     //- logout button
     form(method="POST" class="form-inline nav-item")
-      button(class="btn btn-outline-primary" type="submit" formaction="/logout") Logout
+      button(class="btn btn-link" type="submit" formaction="/logout") Logout
