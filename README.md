@@ -1,4 +1,4 @@
-# SmartList- An Ionic App
+# fuzzyFatCat
 ### An app that allows user to make shopping list directly out of thousands of amazing recipes.
 
 ## <p style="color: green;">Table of Contents</p>
