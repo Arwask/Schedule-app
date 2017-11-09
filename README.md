@@ -7,7 +7,6 @@
 - [Technologies used](#technologies-used)
 - [How to install?](#how-to-install)
 - [How to get started?](#how-to-get-started)
-- [Link to deployed App](#see-the-app-live)
 
 ## <p style="color: green;">Introduction</p>
 This app's main aim is to help managers ease their process of making schedules for employees working in their department.
@@ -30,7 +29,7 @@ Employees can login and view their profile and edit it. They can change their av
 - [npm](https://www.npmjs.com/)
 - [PostgreSQL](https://www.postgresql.org/)
 
-## <p style="color: green;">Technologies used to build</p>
+## <p style="color: green;">Technologies used</p>
 
 - [Express](https://expressjs.com)
 - [jQuery](https://jquery.com/)
