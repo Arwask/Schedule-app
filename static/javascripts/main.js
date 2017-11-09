@@ -29,3 +29,14 @@ $('.print-button').click(function(e) {
   window.print();
   return false; // why false?
 });
+
+$('.test').change(function(e) {
+  let data = $(this).val();
+  data = data.split(':');
+  if (data[3] > 7) {
+    console.log('here', data[0], ':', data[1]);
+    $(`#${data[0]}${data[1]}`)
+      .parent()
+      .addClass('green');
+  }
+});

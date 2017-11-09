@@ -1,7 +1,7 @@
 extends ../layout.pug
 block content
   .col-12
-    table(class="table")
+    table(class="table table-bordered")
       tbody
         tr
           th
@@ -44,6 +44,10 @@ block content
                                 - entry = `${slot.startTime} - ${slot.endTime}`
                     td
                       h6 #{entry}
-                  tr
-                    td
-                      a(class="btn btn-outline-success" href="/manager/generate-schedule") Next
+
+  table(class="table")
+    tr
+      td
+        a(class="btn btn-outline-success" href="/manager/generate-schedule") Next
+      td
+        a(class="btn btn-outline-success" href="/manager/view-schedule") View Schedule

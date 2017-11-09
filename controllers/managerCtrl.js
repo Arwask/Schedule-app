@@ -315,13 +315,10 @@ let getDates = () => {
   let today = new Date();
   let day = today.getDay();
   let nearestSunday = new Date(new Date().getTime() + (7 - day - 1) * 24 * 60 * 60 * 1000);
-  console.log(nearestSunday);
-
   let nextWeek = [nearestSunday.toISOString().slice(0, 10)];
   for (let i = 1; i < 7; i++) {
     nextWeek.push(new Date(nearestSunday.getTime() + i * 24 * 60 * 60 * 1000).toISOString().slice(0, 10));
   }
-  console.log('next week', nextWeek);
   return nextWeek;
 };
 
@@ -398,9 +395,12 @@ module.exports.postManagerSchedule = (req, res, next) => {
       }
     });
     sqlQuery = sqlQuery.slice(0, -1);
-    sequelize.query(sqlQuery, { type: sequelize.QueryTypes.INSERT }).then(() => {
-      res.redirect('/manager/generate-schedule');
-    });
+    sequelize
+      .query(sqlQuery, { type: sequelize.QueryTypes.INSERT })
+      .then(() => {
+        res.redirect('/manager/generate-schedule');
+      })
+      .catch(err => next(err));
   } else {
     let errorMsg = { msg: 'You do not have permission for this route' };
     res.render('errorPage', { errorMsg });
@@ -497,7 +497,8 @@ module.exports.makeSchedule = (req, res, next) => {
           )
           .then(() => {
             res.redirect('/manager/view-schedule');
-          });
+          })
+          .catch(err => next(err));
       }
     });
   } else {
@@ -569,13 +570,15 @@ module.exports.editSchedule = (req, res, next) => {
         let daySlotId = slot[1];
         let dates = getDates();
         let x = parseInt(slot[2]);
-        console.log(slot[2]);
-        let date = dates[x - 1];
+        let i = x - 1;
+        let date = dates[i];
         let today = new Date().toISOString();
-        if (daySlotId == '0') {
-          sequelize.query(`DELETE FROM "schedules" WHERE "employeeId"='${employeeId}' AND "date" = '${date}'`, {
-            type: sequelize.QueryTypes.SELECT
-          });
+        if (daySlotId == 0) {
+          sequelize
+            .query(`DELETE FROM "schedules" WHERE "employeeId"='${employeeId}' AND "date" = '${date}'`, {
+              type: sequelize.QueryTypes.SELECT
+            })
+            .then(() => {});
         } else {
           sequelize
             .query(`SELECT * FROM "schedules" WHERE "employeeId"='${employeeId}' AND "date" = '${date}'`, {
@@ -591,7 +594,7 @@ module.exports.editSchedule = (req, res, next) => {
                 );
               } else {
                 sequelize
-                  .query(`DELETE FROM "schedules" WHERE "employeeId"='${employeeId}' AND "date" = '${date}')`, {
+                  .query(`DELETE FROM "schedules" WHERE "employeeId"='${employeeId}' AND "date" = '${date}'`, {
                     type: sequelize.QueryTypes.SELECT
                   })
                   .then(() => {
@@ -601,13 +604,14 @@ module.exports.editSchedule = (req, res, next) => {
                         type: sequelize.QueryTypes.SELECT
                       }
                     );
-                  });
+                  })
+                  .catch(err => next(err));
               }
             });
         }
-        res.redirect('/manager/view-schedule');
       }
     });
+    res.redirect('/manager/view-schedule');
   } else {
     let errorMsg = { msg: 'You do not have permission for this route' };
     res.render('errorPage', { errorMsg });

@@ -45,7 +45,7 @@ router.post('/manager/manager-schedule', isLoggedIn, isManager, postManagerSched
 router.get('/manager/generate-schedule', isLoggedIn, isManager, generateSchedule); // generate button page
 router.get('/manager/edit-schedule', isLoggedIn, isManager, scheduleGrid);
 router.post('/manager/edit-schedule', isLoggedIn, isManager, editSchedule);
-router.get('/manager/schedule', isLoggedIn, isManager, scheduleGeneraterAlgo);
+// router.get('/manager/schedule', isLoggedIn, isManager, scheduleGeneraterAlgo);
 router.post('/manager/schedule', isLoggedIn, isManager, makeSchedule);
 router.get('/manager/view-schedule', isLoggedIn, isManager, displaySchedule);
 

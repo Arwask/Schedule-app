@@ -238,15 +238,6 @@ module.exports.addNewEmployee = (req, res, next) => {
   }
 };
 
-module.exports.scheduleGrid = (req, res, next) => {
-  if (res.locals.manager == true) {
-    //dosomething
-  } else {
-    let errorMsg = { msg: 'You do not have permission for this route' };
-    res.render('errorPage', { errorMsg });
-  }
-};
-
 module.exports.scheduleGeneraterAlgo = (req, res, next) => {
   if (res.locals.manager == true) {
     const { Employee, Slots, Days, daySlots } = req.app.get('models');
@@ -284,7 +275,7 @@ module.exports.scheduleGeneraterAlgo = (req, res, next) => {
   }
 };
 
-module.exports.generateSchedule = (req, res, next) => {
+module.exports.generateSchedule = (req, res) => {
   res.render('manager/schedule-grid');
 };
 
@@ -349,9 +340,14 @@ module.exports.postManagerSchedule = (req, res, next) => {
       }
     });
     sqlQuery = sqlQuery.slice(0, -1);
-    sequelize.query(sqlQuery, { type: sequelize.QueryTypes.INSERT }).then(() => {
-      res.redirect('/manager/generate-schedule');
-    });
+    sequelize
+      .query(sqlQuery, { type: sequelize.QueryTypes.INSERT })
+      .then(() => {
+        res.redirect('/manager/generate-schedule');
+      })
+      .catch(err => {
+        next(err);
+      });
   } else {
     let errorMsg = { msg: 'You do not have permission for this route' };
     res.render('errorPage', { errorMsg });
@@ -467,17 +463,21 @@ module.exports.addAvailability = (req, res, next) => {
     const currentEmployeeId = req.session.passport.user.id;
     let date = new Date().toISOString();
     let queryString = 'INSERT INTO "availability"("daySlotId", "employeeId", "createdAt", "updatedAt") VALUES';
-    data.forEach(chunk => {
-      if (chunk !== '0') {
-        queryString += `('${chunk}', '${currentEmployeeId}', '${date}', '${date}'),`;
-      }
-    });
+    if (typeof data == 'string') {
+      queryString += `('${data}', '${currentEmployeeId}', '${date}', '${date}'),`;
+    } else {
+      data.forEach(chunk => {
+        if (chunk !== '0') {
+          queryString += `('${chunk}', '${currentEmployeeId}', '${date}', '${date}'),`;
+        }
+      });
+    }
     queryString = queryString.slice(0, -1);
     sequelize
       .query(queryString, {
         type: sequelize.QueryTypes.INSERT
       })
-      .then(data => {
+      .then(() => {
         // res.json(data);
       })
       .catch(err => {

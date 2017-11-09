@@ -15,3 +15,14 @@ nav {
   border-radius: 10px;
   cursor: pointer;
 }
+
+.green {
+  background-color: green !important;
+}
+
+.gray {
+  color: gray !important;
+}
+.red {
+  color: red !important;
+}

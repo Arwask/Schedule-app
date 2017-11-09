@@ -1,8 +1,7 @@
 extends ../layout.pug
 block content
-  .col-12
   //- form(action=`/manager/schedule`, method="POST")
-  table(class="table")
+  table(class="table table-bordered")
     tbody
       tr
         th
@@ -22,12 +21,13 @@ block content
                 each ds in data.eachDaySlots
                   if(avail.daySlotId === ds.id)
                     if(day.id === ds.dayId)
-                      -console.log(avail.daySlotId, ds.id, emp.id, day.id, ds.dayId)
                       each slot in data.slots
                         if(slot.id == ds.slotId)
                           - entry = `${slot.startTime} - ${slot.endTime}`
             td
               h6 #{entry}
+  table(class="table")
+    tbody
       tr
         td
           button(type="button" class='btn btn-outline-success print-button' ) Print Schedule
