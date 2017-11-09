@@ -39,4 +39,16 @@ $('.test').change(function(e) {
       .parent()
       .addClass('green');
   }
+  if (data[3] <= 7 && data[3] >= 4) {
+    console.log('here', data[0], ':', data[1]);
+    $(`#${data[0]}${data[1]}`)
+      .parent()
+      .addClass('blue');
+  }
+  if (data[3] < 4) {
+    console.log('here', data[0], ':', data[1]);
+    $(`#${data[0]}${data[1]}`)
+      .parent()
+      .addClass('red');
+  }
 });
