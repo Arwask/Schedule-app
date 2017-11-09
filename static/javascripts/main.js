@@ -35,6 +35,8 @@ $('.test').change(function(e) {
   data = data.split(':');
   if (data[3] > 7) {
     console.log('here', data[0], ':', data[1]);
-    $(`#${data[0]}${data[1]}`).addClass('green');
+    $(`#${data[0]}${data[1]}`)
+      .parent()
+      .addClass('green');
   }
 });

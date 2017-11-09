@@ -17,12 +17,12 @@ nav {
 }
 
 .green {
-  color: green;
+  background-color: green !important;
 }
 
 .gray {
-  color: gray;
+  color: gray !important;
 }
 .red {
-  color: red;
+  color: red !important;
 }
