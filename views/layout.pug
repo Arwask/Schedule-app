@@ -1,12 +1,13 @@
 doctype html
 html
 	head
-		title Scheduler
+		title OnTheClok
 		meta(charset="utf-8")
 		meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
 		link(rel='stylesheet', href='/public/lib/bootstrap/css/bootstrap.min.css')
+		link(href="https://fonts.googleapis.com/css?family=Playball" rel="stylesheet")
 		link(rel='stylesheet' href='/public/css/main.css')
-	body
+	body(class="backgroundDisplay")
 		if(session.passport)
 			if(session.passport.user.jobTitle === 'manager')
 				include manager/nav.pug

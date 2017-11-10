@@ -100,3 +100,14 @@ module.exports.logout = (req, res) => {
     res.redirect('/');
   });
 };
+
+module.exports.changePassword = (req, res, next) => {
+  res.render('change-password');
+};
+
+module.exports.savePassword = (req, res, next) => {
+  const userPassword = req.session.passport.user.password;
+  const userId = req.session.passport.user.id;
+  console.log(userPassword, userId);
+  res.json(req.body);
+};

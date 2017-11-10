@@ -1,1 +1,6 @@
 extends ../layout.pug
+block content
+  -let name = session.passport.user.firstName;
+  h1(class="pageHeader") Welcome back, #{name}
+  script(src='/public/lib/jQuery/jquery.js')
+  script(src='/public/javascripts/main.js')

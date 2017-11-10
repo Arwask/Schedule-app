@@ -1,5 +1,10 @@
 extends layout.pug
 block content
-  h1 Scheduler
+  h1(class="pageHeader") “Welcome to OnTheClok”
+  h5(class="pageSubHeader") “Take the hard work out of scheduling and focus on things that matter”
+  div(class="")
+    a(class="btn bigButton" href="/login") Login
   script
     include ../client/client.js
+    script(src='/public/lib/jQuery/jquery.js')
+    script(src='/public/javascripts/main.js')

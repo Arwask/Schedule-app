@@ -18,7 +18,7 @@ block content
           tr
             th Date Of Birth
             td
-              input(type="date" name="dob" id="dob" value=`${data.employee.dob}`)
+              input(type="date" name="dob" id="dob" value=`${data.employee.dob}` required)
           tr
             th Phone Number
             td
@@ -62,14 +62,14 @@ block content
             th End Date
             if(data.employee.endDate != null)
               td
-                ex-employee
+                ex-employee (#{data.employee.endDate})
             else
               td
                 input(type="date" name="endDate" id="endDate")
           tr
             th Total Hours
             td
-              input(type="number" name="totalHours" id="totalHours" value=`${data.employee.totalHours}`)
+              input(type="number" name="totalHours" id="totalHours" required)
           tr
             th Notes
             td
@@ -89,3 +89,5 @@ block content
           tr
             td(colspan=2)
               button(type="submit" class="btn btn-outline-primary" href=`/manager/employee-details/${data.employee.id}`) Save
+              script(src='/public/lib/jQuery/jquery.js')
+              script(src='/public/javascripts/main.js')

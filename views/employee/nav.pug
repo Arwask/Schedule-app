@@ -1,7 +1,9 @@
-nav(class="navbar navbar-expand-lg navbar-light bg-light")
-  a(class="navbar-brand nav-item" href="/") Scheduler
-  -let name = session.passport.user.firstName;
-  h4 Hello #{name}
+nav(class="navbar navbar-expand-lg navbar-dark bg-dark")
+  a(class="navbar-brand nav-item" href="/welcome")
+    img(src="/public/images/clock.png" alt="logo" class="center-image")
+  div(class="nav-item row")
+    //- login button
+    h2(class="mainHeader") nTheClok
   //- hamburger button on small screens
   button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation")
     span(class="navbar-toggler-icon")
@@ -9,9 +11,10 @@ nav(class="navbar navbar-expand-lg navbar-light bg-light")
   div(class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup")
     //- if session.passport
     //- user info shown only when logged in
-    a(class="btn btn-outline-primary" href="/employee/availability-view")  Availability
-
-    a(class="btn btn-outline-primary" href="/employee/profile")  Profile
+    a( href="/employee/profile" style="margin-left:150px;")  Profile
+    a( href="/employee/availability-view")  Availability
     //- logout button
     form(method="POST" class="form-inline nav-item")
-      button(class="btn btn-outline-primary" type="submit" formaction="/logout") Logout
+      button(class="btn btn-link" type="submit" formaction="/logout") Logout
+      script(src='/public/lib/jQuery/jquery.js')
+      script(src='/public/javascripts/main.js')

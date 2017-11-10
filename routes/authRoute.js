@@ -3,13 +3,14 @@
 const { Router } = require('express');
 const router = Router();
 // const
-const { displayLogin, login, logout, isManager } = require('../controllers/authCtrl.js');
+const { displayLogin, login, logout, isManager, changePassword, savePassword } = require('../controllers/authCtrl.js');
 
 const { displayIndex } = require('../controllers/employeeCtrl');
 // login existing users
 router.get('/login', displayLogin);
 router.post('/login', login);
-
+router.get('/change-password', isLoggedIn, changePassword);
+router.post('/change-password', isLoggedIn, savePassword);
 router.get('/welcome', isLoggedIn, isManager, displayIndex);
 router.post('/logout', logout);
 

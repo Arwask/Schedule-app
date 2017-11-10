@@ -1,31 +1,32 @@
 extends ../layout.pug
 block content
   //- form(action=`/manager/schedule`, method="POST")
-  table(class="table table-bordered")
+  table(class="table table-bordered table-striped")
     tbody
-      tr
-        th
-        each day in data.days
-          th #{day.name}
+      thead
         tr
           th
-          each date in data.dates
-            th #{date}
-      each emp in data.employees
-        tr
-          td #{emp.firstName} #{emp.lastName}
           each day in data.days
-            -let entry = "OFF"
-            each avail in data.schedule
-              if(avail.employeeId === emp.id)
-                each ds in data.eachDaySlots
-                  if(avail.daySlotId === ds.id)
-                    if(day.id === ds.dayId)
-                      each slot in data.slots
-                        if(slot.id == ds.slotId)
-                          - entry = `${slot.startTime} - ${slot.endTime}`
-            td
-              h6 #{entry}
+            th #{day.name}
+          tr
+            th
+            each date in data.dates
+              th #{date}
+        each emp in data.employees
+          tr
+            td #{emp.firstName} #{emp.lastName}
+            each day in data.days
+              -let entry = "OFF"
+              each avail in data.schedule
+                if(avail.employeeId === emp.id)
+                  each ds in data.eachDaySlots
+                    if(avail.daySlotId === ds.id)
+                      if(day.id === ds.dayId)
+                        each slot in data.slots
+                          if(slot.id == ds.slotId)
+                            - entry = `${slot.startTime} - ${slot.endTime}`
+              td
+                h6 #{entry}
   table(class="table")
     tbody
       tr
