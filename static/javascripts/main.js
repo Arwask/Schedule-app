@@ -1,26 +1,4 @@
 'use strict';
-console.log('hi');
-
-$('#fileInput').on('change', event => {
-  let file = event.target.files[0];
-  let fbStorageRef = firebase.storage().ref(`images/${file.name}`);
-  let uploadTask = fbStorageRef.put(file);
-
-  uploadTask.on(
-    firebase.storage.TaskEvent.STATE_CHANGED,
-    function(snapshot) {
-      let progress = snapshot.bytesTransferred / snapshot.totalBytes * 100;
-      $uploader.val(progress);
-    },
-    function(error) {
-      console.log('error', error);
-    },
-    function() {
-      let downloadURL = uploadTask.snapshot.downloadURL;
-      $('#pictureUrl').val(downloadURL);
-    }
-  );
-});
 
 // search handling
 
@@ -52,3 +30,16 @@ $('.test').change(function(e) {
       .addClass('red');
   }
 });
+
+console.log('address', window.location);
+let address = window.location.href.split('/');
+let route = address.pop();
+console.log('route', route);
+if (route !== 'welcome' && route !== 'index' && route !== 'login' && route !== '') {
+  if ($('body').hasClass('backgroundDisplay')) {
+    $('body').removeClass('backgroundDisplay');
+  }
+} else {
+  $('body').addClass('backgroundDisplay');
+}
+console.log(route);

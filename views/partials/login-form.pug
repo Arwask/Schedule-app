@@ -1,14 +1,17 @@
 extends ../layout.pug
 block content
-  .row
-    .col-6
-      h3 Login:
-      form(name="login-user" method="post" action="/login")
-        .form-group
-          label(class="form-control-label" for="employeeId") Employee ID
-          input(id="employeeId" type="text" class="form-control" placeholder="12345" name="employeeId")
-        .form-group
-          label(class="form-control-label" for="password") Password
-          input(id="password" type="password" class="form-control" placeholder="Password" name="password")
-        button(type="submit" class="btn-primary") Login
-      h4 #{message}
+  div(class="loginForm")
+    .row
+      .col-10
+        h3 Login:
+        form(name="login-user" method="post" action="/login")
+          .form-group
+            label(class="form-control-label" for="employeeId") Employee ID
+            input(id="employeeId" type="text" class="form-control" placeholder="12345" name="employeeId")
+          .form-group
+            label(class="form-control-label" for="password") Password
+            input(id="password" type="password" class="form-control" placeholder="Password" name="password")
+          button(type="submit" class="btn btn-outline-dark") Login
+        h4 #{message}
+        script(src='/public/lib/jQuery/jquery.js')
+        script(src='/public/javascripts/main.js')

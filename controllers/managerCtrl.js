@@ -8,7 +8,8 @@ module.exports.getDepartmentEmployees = (req, res, next) => {
     Employee.findAll({
       include: [{ model: Department }],
       where: {
-        departmentId: managerDept
+        departmentId: managerDept,
+        endDate: null
       }
     })
       .then(employees => {
@@ -84,6 +85,16 @@ module.exports.editEmployeeDetails = (req, res, next) => {
   if (res.locals.manager == true) {
     if (req.body.endDate === '') {
       req.body.endDate = null;
+    } else {
+      req.body.endDate = req.body.endDate.slice(0, 10);
+    }
+    if (req.body.dob === '') {
+      req.body.dob = null;
+    } else {
+      req.body.dob = req.body.dob.slice(0, 10);
+    }
+    if (req.body.totalHours === '') {
+      req.body.totalHours = null;
     }
     let empObj = {
       firstName: req.body.firstName,
@@ -93,7 +104,7 @@ module.exports.editEmployeeDetails = (req, res, next) => {
       email: req.body.email,
       departmentId: req.body.department,
       jobTitle: req.body.jobTitle,
-      startDate: req.body.startDate,
+      startDate: req.body.startDate.slice(0, 10),
       endDate: req.body.endDate,
       totalHours: req.body.totalHours,
       notes: req.body.notes

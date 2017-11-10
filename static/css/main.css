@@ -1,3 +1,10 @@
+.backgroundDisplay,
+.subBody {
+  background-image: url('/public/images/bg2.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 nav {
   margin-bottom: 35px;
 }
@@ -23,4 +30,130 @@ nav {
 }
 .red {
   background-color: #f0d120 !important;
+}
+
+.center-image {
+  width: 35px;
+  height: 35px;
+}
+
+.img-container {
+  width: 100%;
+}
+
+.mainHeader {
+  color: #5198d4;
+}
+
+.pageHeader {
+  color: black;
+  margin: 15% 10% 0 10%;
+  text-align: center;
+  font-size: 4em;
+  font-family: 'Playball', cursive;
+}
+
+.pageSubHeader {
+  color: black;
+  font-size: 2.3em;
+  margin: 0 10% 5% 10%;
+  font-family: 'Playball', cursive;
+  text-align: center;
+}
+
+.loginForm {
+  background-color: white;
+  margin: 10% 25%;
+  width: 50%;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 5px 5px 5px #838181;
+}
+
+/* Awesome button animation: https://codepen.io/sazzad/pen/yNNNJG */
+
+.bigButton {
+  width: 30%;
+  margin: 0 35%;
+  box-shadow: 10px 10px 5px #838181;
+  color: #5198d4;
+  font-size: 2em;
+  padding: 10px;
+}
+
+a.bigButton:link,
+a.bigButton:visited {
+  position: relative;
+  display: block;
+  margin: 30px auto 0;
+  padding: 14px 15px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  overflow: hidden;
+  letter-spacing: 0.08em;
+  border-radius: 0;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(0, 0, 0, 0.2);
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
+}
+a.bigButton:link:after,
+a.bigButton:visited:after {
+  content: '';
+  position: absolute;
+  height: 0%;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  z-index: -1;
+  -webkit-transition: all 0.75s ease 0s;
+  -moz-transition: all 0.75s ease 0s;
+  -o-transition: all 0.75s ease 0s;
+  transition: all 0.75s ease 0s;
+}
+a.bigButton:link:hover,
+a.bigButton:visited:hover {
+  color: #fff;
+  text-shadow: none;
+}
+a.bigButton:link:hover:after,
+a.bigButton:visited:hover:after {
+  height: 450%;
+}
+a.bigButton:link,
+a.bigButton:visited {
+  position: relative;
+  display: block;
+  margin: 30px auto 0;
+  padding: 14px 15px;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 0;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  overflow: hidden;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(0, 0, 0, 0.2);
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
+}
+
+a.bigButton {
+  border: 2px solid black;
+}
+a.bigButton:after {
+  background: black;
+  -moz-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+  -ms-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+  -webkit-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+  transform: translateX(-50%) translateY(-50%) rotate(-25deg);
 }
