@@ -1,4 +1,4 @@
-# fuzzyFatCat
+# OnTheClok
 ### An App that takes the hard work out of scheduling so that you can focus on things that matter.
 
 ## <p style="color: green;">Table of Contents</p>
