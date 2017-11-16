@@ -463,8 +463,9 @@ module.exports.addAvailability = (req, res, next) => {
     const { sequelize } = req.app.get('models');
     const currentEmployeeId = req.session.passport.user.id;
     let date = new Date().toISOString();
-    let queryString = 'INSERT INTO "availability"("daySlotId", "employeeId", "createdAt", "updatedAt") VALUES';
     if (data) {
+      //TODO: check if data already exists.
+      let queryString = 'INSERT INTO "availability"("daySlotId", "employeeId", "createdAt", "updatedAt") VALUES';
       if (typeof data == 'string') {
         queryString += `('${data}', '${currentEmployeeId}', '${date}', '${date}'),`;
       } else {
