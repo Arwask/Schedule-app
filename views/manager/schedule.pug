@@ -18,7 +18,7 @@ block content
                 td #{emp.firstName} #{emp.lastName}
                 each day in data.days
                   td
-                    select(class="btn btn-light dropdown-toggle multiselect-ui form-control test" #propertyType.select.form-control.input-lg name='slots')
+                    select(class="btn btn-light dropdown-toggle form-control test" #propertyType.select.form-control.input-lg name='slots')
                       div(class="dropdown-menu" aria-labelledby="dropdownMenuButton")
                         option(class="dropdown-item" href="#" name=`day` id='dayId' value=0) OFF
                           each ds in data.eachDaySlots
