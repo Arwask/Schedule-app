@@ -464,30 +464,48 @@ module.exports.addAvailability = (req, res, next) => {
     const currentEmployeeId = req.session.passport.user.id;
     let date = new Date().toISOString();
     if (data) {
-      //TODO: check if data already exists.
       let queryString = 'INSERT INTO "availability"("daySlotId", "employeeId", "createdAt", "updatedAt") VALUES';
       if (typeof data == 'string') {
-        queryString += `('${data}', '${currentEmployeeId}', '${date}', '${date}'),`;
+        // if only single availability is added.
+        sequelize
+          .query(`SELECT * FROM "availability" WHERE "daySlotId" = ${data} AND "employeeId"=${currentEmployeeId}`, {
+            type: sequelize.QueryTypes.SELECT
+          })
+          .then(data => {
+            if (data.length == 0) {
+              queryString += `('${data}', '${currentEmployeeId}', '${date}', '${date}'),`;
+            } else {
+              res.redirect('/employee/availability-view');
+            }
+          });
       } else {
         data.forEach(chunk => {
           if (chunk !== '0') {
-            queryString += `('${chunk}', '${currentEmployeeId}', '${date}', '${date}'),`;
+            sequelize
+              .query(`SELECT * FROM "availability" WHERE "daySlotId" = ${data} AND "employeeId"=${currentEmployeeId}`, {
+                type: sequelize.QueryTypes.SELECT
+              })
+              .then(data => {
+                if (data.length == 0) {
+                  queryString += `('${chunk}', '${currentEmployeeId}', '${date}', '${date}'),`;
+                }
+              });
           }
         });
+        queryString = queryString.slice(0, -1);
+        sequelize
+          .query(queryString, {
+            type: sequelize.QueryTypes.INSERT
+          })
+          .then(() => {
+            // res.json(data);
+          })
+          .catch(err => {
+            next(err);
+          });
       }
-      queryString = queryString.slice(0, -1);
-      sequelize
-        .query(queryString, {
-          type: sequelize.QueryTypes.INSERT
-        })
-        .then(() => {
-          // res.json(data);
-        })
-        .catch(err => {
-          next(err);
-        });
+      res.redirect('/employee/availability-view');
     }
-    res.redirect('/employee/availability-view');
   } else {
     let errorMsg = { msg: 'You do not have permission to this route' };
     res.render('errorPage', { errorMsg });
