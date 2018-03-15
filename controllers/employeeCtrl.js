@@ -502,45 +502,55 @@ module.exports.addAvailability = (req, res, next) => {
 		const currentEmployeeId = req.session.passport.user.id;
 		let date = new Date().toISOString();
 		if (data) {
-			let queryString = 'INSERT INTO "availability"("daySlotId", "employeeId", "createdAt", "updatedAt") VALUES';
+			// res.json(data);
+			let queryString = '';
 			if (typeof data == 'string') {
 				// if only single availability is added.
+				// check if the data already exists in the database
 				sequelize
 					.query(`SELECT * FROM "availability" WHERE "daySlotId" = ${data} AND "employeeId"=${currentEmployeeId}`, {
 						type: sequelize.QueryTypes.SELECT
 					})
-					.then(data => {
-						if (data.length == 0) {
-							queryString += `('${data}', '${currentEmployeeId}', '${date}', '${date}'),`;
+					.then(data2 => {
+						// if no data comes back - that means the data does not exist in the database and so continue making the insert string
+						if (data2.length == 0) {
+							queryString = `INSERT INTO "availability"("daySlotId", "employeeId", "createdAt", "updatedAt") VALUES ('${data}', '${currentEmployeeId}', '${date}', '${date}')`;
+							sequelize
+								.query(queryString, { type: sequelize.QueryTypes.INSERT })
+								.then(() => {})
+								.catch(err => {
+									next(err);
+								});
 						} else {
 							res.redirect('/employee/availability-view');
 						}
 					});
 			} else {
+				// if multiple changes, check
 				data.forEach(chunk => {
 					if (chunk !== '0') {
 						sequelize
-							.query(`SELECT * FROM "availability" WHERE "daySlotId" = ${data} AND "employeeId"=${currentEmployeeId}`, {
-								type: sequelize.QueryTypes.SELECT
-							})
+							.query(
+								`SELECT * FROM "availability" WHERE "daySlotId" = ${chunk} AND "employeeId"=${currentEmployeeId}`,
+								{
+									type: sequelize.QueryTypes.SELECT
+								}
+							)
 							.then(data => {
 								if (data.length == 0) {
-									queryString += `('${chunk}', '${currentEmployeeId}', '${date}', '${date}'),`;
+									queryString = `INSERT INTO "availability"("daySlotId", "employeeId", "createdAt", "updatedAt") VALUES ('${chunk}', '${currentEmployeeId}', '${date}', '${date}')`;
+									sequelize
+										.query(queryString, { type: sequelize.QueryTypes.INSERT })
+										.then(() => {
+											// res.json(data);
+										})
+										.catch(err => {
+											next(err);
+										});
 								}
 							});
 					}
 				});
-				queryString = queryString.slice(0, -1);
-				sequelize
-					.query(queryString, {
-						type: sequelize.QueryTypes.INSERT
-					})
-					.then(() => {
-						// res.json(data);
-					})
-					.catch(err => {
-						next(err);
-					});
 			}
 			res.redirect('/employee/availability-view');
 		}
@@ -550,7 +560,7 @@ module.exports.addAvailability = (req, res, next) => {
 	}
 };
 
-// --------- GET ALREADY SAVED  USER AVAILABILITIES------
+// --------- GET ALREADY SAVED USER AVAILABILITIES------
 
 module.exports.getUserAvailability = (req, res, next) => {
 	if (res.locals.employee == true) {
