@@ -48,7 +48,7 @@ module.exports.register = (req, res, next) => {
 /**
  * Controller method to render the login form page
  */
-module.exports.displayLogin = (req, res, next) => {
+module.exports.displayLogin = (req, res) => {
 	res.render('partials/login-form');
 };
 
@@ -76,7 +76,7 @@ module.exports.login = (req, res, next) => {
 	})(req, res, next);
 };
 
-module.exports.welcome = (req, res, next) => {
+module.exports.welcome = (req, res) => {
 	res.render('partials/login-form');
 };
 
@@ -97,15 +97,15 @@ module.exports.isManager = (req, res, next) => {
  */
 module.exports.logout = (req, res) => {
 	req.session.destroy(function(err) {
-		res.redirect('/');
+		if (!err) res.redirect('/');
 	});
 };
 
-module.exports.changePassword = (req, res, next) => {
+module.exports.changePassword = (req, res) => {
 	res.render('change-password');
 };
 
-module.exports.savePassword = (req, res, next) => {
+module.exports.savePassword = (req, res) => {
 	// const userPassword = req.session.passport.user.password;
 	// const userId = req.session.passport.user.id;
 	// console.log(userPassword, userId);
