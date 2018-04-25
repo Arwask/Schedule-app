@@ -119,7 +119,6 @@ module.exports.editEmployeeDetails = (req, res, next) => {
 			where: { id: req.params.employeeId }
 		})
 			.then(() => {
-				// console.log(req.paarams.employeeId);
 				res.redirect(`/manager/manage-employee`);
 			})
 			.catch(err => {
