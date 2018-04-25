@@ -6,7 +6,9 @@
 		"host": "ec2-23-23-180-121.compute-1.amazonaws.com",
 		"dialect": "postgres",
 		"dialectOptions": {
-			"ssl": true
+			"ssl": {
+				"require": true
+			}
 		}
 	},
 	"test": {
