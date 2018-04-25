@@ -3,6 +3,10 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
+	"engines": {
+		"node": "8.11.1",
+		"npm": "5.6.0"
+	},
 	"scripts": {
 		"start": "nodemon app.js",
 		"test": "mocha --watch --recursive -R spec",
