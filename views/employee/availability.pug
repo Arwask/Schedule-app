@@ -18,7 +18,7 @@ block content
                     h5 #{day.name}
                   td
 
-                    select(class=" dropdown-toggle selectpicker" #propertyType.select.form-control.input-lg name='slots' multiple)
+                    select(class=" dropdown-toggle" #propertyType.select.form-control.input-lg name='slots' multiple)
                       div(class="dropdown-menu" aria-labelledby="dropdownMenuButton")
                         option(class="dropdown-item" href="#" name=`day` id='dayId' value=0) --select--
                           each ds in data.eachDaySlots

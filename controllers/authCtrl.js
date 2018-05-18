@@ -93,7 +93,8 @@ module.exports.isManager = (req, res, next) => {
 };
 
 /**
- * Controller method to handle the logout click, destroy the session, and redirect users to the home page
+ * Controller method to handle the logout click, destroy the session, and redirect
+ *  users to the home page
  */
 module.exports.logout = (req, res) => {
 	req.session.destroy(function(err) {
